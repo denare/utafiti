@@ -1,0 +1,8 @@
+.env.local
+.env
+node_modules/
+*.log
+.firebase/
+backup1/
+serviceAccountKey.json
+config.js

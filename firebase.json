@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "site": "utafiti-tz",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "build-config.js",
+      ".env.local",
+      "backup1/**",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

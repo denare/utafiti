@@ -1,0 +1,22 @@
+{
+  "name": "utafiti-survey",
+  "version": "1.0.0",
+  "description": "Housing Survey Application for Tanzania",
+  "scripts": {
+    "build": "node build-config.js",
+    "deploy": "npm run build && firebase deploy --force",
+    "serve": "npm run build && firebase serve",
+    "backup": "node backup-database.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  },
+  "keywords": [
+    "firebase",
+    "survey",
+    "housing",
+    "tanzania"
+  ],
+  "author": "Utafiti",
+  "license": "ISC"
+}
