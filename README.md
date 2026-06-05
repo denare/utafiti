@@ -6,7 +6,7 @@ A comprehensive Kiswahili survey application for collecting housing market data 
 
 ### Deployed App
 - **Survey Form:** https://utafiti-tz.web.app
-- **Admin Dashboard:** https://utafiti-tz.web.app/admin.html
+- **Admin Dashboard:** https://utafiti-tz.web.app/main.php
 
 ### Local Development
 ```bash
