@@ -1,840 +1,1517 @@
 <!DOCTYPE html>
 <html lang="sw">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Utafiti wa Nyumba Tanzania</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Utafiti wa hiari kuhusu hali ya kutafuta nyumba Tanzania - 2026. Shiriki kutoa maoni yako ili kuboresha hali ya makazi.">
+  <title>Utafiti wa Nyumba Tanzania</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
+    rel="stylesheet">
 
-<!-- Configuration (injected from .env.local) -->
-<script src="config.js"></script>
+  <!-- Configuration (injected from .env.local) -->
+  <script src="config.js"></script>
 
-<!-- Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  // Firebase config is injected from config.js
-  const firebaseConfig = window.firebaseConfig || {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
-  };
+    // Firebase config is injected from config.js
+    const firebaseConfig = window.firebaseConfig || {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
+    };
 
-  if (!window.firebaseConfig) {
-    console.error('❌ Firebase config not loaded. Make sure config.js is loaded.');
-  }
+    if (!window.firebaseConfig) {
+      console.error('❌ Firebase config not loaded. Make sure config.js is loaded.');
+    }
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  window._db = db;
-  window._fbModules = { collection, addDoc, doc, setDoc, getDoc, updateDoc, increment, serverTimestamp };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window._db = db;
+    window._fbModules = { collection, addDoc, doc, setDoc, getDoc, updateDoc, increment, serverTimestamp };
 
-  async function trackOpen() {
-    try {
-      const hasVisited = localStorage.getItem('has_visited_utafiti');
-      if (!hasVisited) {
-        const statsRef = doc(db, "stats", "overview");
-        const snap = await getDoc(statsRef);
-        if (!snap.exists()) {
-          await setDoc(statsRef, { unique_opens: 1, submissions: 0, lastUpdated: serverTimestamp() });
-        } else {
-          await updateDoc(statsRef, { unique_opens: increment(1), lastUpdated: serverTimestamp() });
+    async function trackOpen() {
+      try {
+        const hasVisited = localStorage.getItem('has_visited_utafiti');
+        if (!hasVisited) {
+          const statsRef = doc(db, "stats", "overview");
+          const snap = await getDoc(statsRef);
+          if (!snap.exists()) {
+            await setDoc(statsRef, { unique_opens: 1, submissions: 0, lastUpdated: serverTimestamp() });
+          } else {
+            await updateDoc(statsRef, { unique_opens: increment(1), lastUpdated: serverTimestamp() });
+          }
+          localStorage.setItem('has_visited_utafiti', 'true');
         }
-        localStorage.setItem('has_visited_utafiti', 'true');
+      } catch (e) { console.warn("Stats error:", e.message); }
+    }
+    trackOpen();
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --brown: #5C3D1E;
+      --brown-l: #F5EFE6;
+      --brown-m: #A07850;
+      --brown-d: #3D2510;
+      --amber: #BA7517;
+      --amber-l: #FDF6EC;
+      --amber-m: #C8893A;
+      --bg: #FAF6F0;
+      --card: #FFFDF9;
+      --text: #2C1F0E;
+      --muted: #7A6A56;
+      --border: rgba(92, 61, 30, 0.12);
+      --radius: 16px;
+      --green: #2E7D32;
+      --red: #C62828;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px
+    }
+
+    .header {
+      background: var(--brown);
+      padding: 36px 24px 32px;
+      text-align: center;
+      color: #fff
+    }
+
+    .logo {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 14px;
+      text-transform: uppercase
+    }
+
+    .header h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 10px
+    }
+
+    .header h1 span {
+      color: var(--amber-m)
+    }
+
+    .header p {
+      font-size: 13px;
+      opacity: 0.8;
+      line-height: 1.7;
+      max-width: 460px;
+      margin: 0 auto 14px
+    }
+
+    .header-meta {
+      display: inline-flex;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      padding: 7px 18px;
+      font-size: 12px
+    }
+
+    .progress-wrap {
+      background: var(--card);
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05)
+    }
+
+    .progress-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--brown-m);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+      width: 0%
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      font-weight: 600
+    }
+
+    .form-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px 16px
+    }
+
+    /* Section headers — hidden by default, shown conditionally */
+    .section-head {
+      background: var(--brown);
+      color: #fff;
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 16px 20px;
+      margin-top: 28px
+    }
+
+    .section-head.hidden {
+      display: none !important
+    }
+
+    .section-num {
+      font-size: 10px;
+      font-weight: 700;
+      opacity: 0.6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px
+    }
+
+    .section-head h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 700
+    }
+
+    .q-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 20px;
+      margin-bottom: 0;
+      border-top: none;
+      transition: all 0.35s ease
+    }
+
+    .q-card.last {
+      border-radius: 0 0 var(--radius) var(--radius)
+    }
+
+    .q-card.hidden {
+      display: none !important
+    }
+
+    .q-num {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--brown-m);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px
+    }
+
+    .q-text {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      line-height: 1.4
+    }
+
+    .q-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.5
+    }
+
+    .q-required {
+      color: #E24B4A;
+      margin-left: 3px
+    }
+
+    .radio-group,
+    .check-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-size: 14px;
+      line-height: 1.4;
+      user-select: none
+    }
+
+    .option:hover {
+      border-color: var(--brown-m);
+      background: var(--brown-l)
+    }
+
+    .option input {
+      margin-top: 2px;
+      accent-color: var(--brown-m);
+      flex-shrink: 0
+    }
+
+    .option.selected {
+      border-color: var(--brown-m);
+      background: var(--brown-l);
+      font-weight: 500
+    }
+
+    select,
+    input[type=text],
+    input[type=number],
+    textarea {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      transition: border 0.2s
+    }
+
+    select:focus,
+    input[type=text]:focus,
+    input[type=number]:focus,
+    textarea:focus {
+      border-color: var(--brown-m);
+      background: #fff
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical
+    }
+
+    .scale-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .scale-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: inherit;
+      color: var(--muted)
+    }
+
+    .scale-btn:hover,
+    .scale-btn.sel {
+      background: var(--brown-m);
+      border-color: var(--brown-m);
+      color: #fff;
+      transform: scale(1.05)
+    }
+
+    .scale-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .q-card.invalid .q-text::after {
+      content: " — Tafadhali jibu swali hili";
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 400;
+      margin-left: 4px
+    }
+
+    .q-card.invalid {
+      border-left: 3px solid var(--red)
+    }
+
+    .q-card.slide-in {
+      animation: slideIn 0.3s ease forwards
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px)
       }
-    } catch(e) { console.warn("Stats error:", e.message); }
-  }
-  trackOpen();
-</script>
 
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --brown:#5C3D1E;--brown-l:#F5EFE6;--brown-m:#A07850;--brown-d:#3D2510;
-    --amber:#BA7517;--amber-l:#FDF6EC;--amber-m:#C8893A;
-    --bg:#FAF6F0;--card:#FFFDF9;--text:#2C1F0E;--muted:#7A6A56;
-    --border:rgba(92,61,30,0.12);--radius:16px;
-    --green:#2E7D32;--red:#C62828;
-  }
-  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 60px}
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
 
-  .header{background:var(--brown);padding:36px 24px 32px;text-align:center;color:#fff}
-  .logo{font-size:11px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.55);margin-bottom:14px;text-transform:uppercase}
-  .header h1{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;line-height:1.3;margin-bottom:10px}
-  .header h1 span{color:var(--amber-m)}
-  .header p{font-size:13px;opacity:0.8;line-height:1.7;max-width:460px;margin:0 auto 14px}
-  .header-meta{display:inline-flex;gap:16px;background:rgba(255,255,255,0.1);border-radius:30px;padding:7px 18px;font-size:12px}
+    .submit-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-top: 24px;
+      text-align: center
+    }
 
-  .progress-wrap{background:var(--card);padding:12px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-  .progress-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px}
-  .progress-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
-  .progress-fill{height:100%;background:var(--brown-m);border-radius:3px;transition:width 0.4s ease;width:0%}
-  .progress-label{font-size:12px;color:var(--muted);white-space:nowrap;font-weight:600}
+    .submit-section p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.6
+    }
 
-  .form-wrap{max-width:640px;margin:0 auto;padding:24px 16px}
+    .submit-btn {
+      background: var(--brown);
+      color: #fff;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      max-width: 320px
+    }
 
-  /* Section headers — hidden by default, shown conditionally */
-  .section-head{background:var(--brown);color:#fff;border-radius:var(--radius) var(--radius) 0 0;padding:16px 20px;margin-top:28px}
-  .section-head.hidden{display:none!important}
-  .section-num{font-size:10px;font-weight:700;opacity:0.6;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-  .section-head h2{font-family:'Sora',sans-serif;font-size:15px;font-weight:700}
+    .submit-btn:hover {
+      background: var(--brown-d);
+      transform: translateY(-1px)
+    }
 
-  .q-card{background:var(--card);border:1px solid var(--border);padding:20px;margin-bottom:0;border-top:none;transition:all 0.35s ease}
-  .q-card.last{border-radius:0 0 var(--radius) var(--radius)}
-  .q-card.hidden{display:none!important}
-  .q-num{font-size:10px;font-weight:700;color:var(--brown-m);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
-  .q-text{font-size:15px;font-weight:600;margin-bottom:4px;line-height:1.4}
-  .q-hint{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5}
-  .q-required{color:#E24B4A;margin-left:3px}
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none
+    }
 
-  .radio-group,.check-group{display:flex;flex-direction:column;gap:8px}
-  .option{display:flex;align-items:flex-start;gap:10px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;transition:all 0.18s;font-size:14px;line-height:1.4;user-select:none}
-  .option:hover{border-color:var(--brown-m);background:var(--brown-l)}
-  .option input{margin-top:2px;accent-color:var(--brown-m);flex-shrink:0}
-  .option.selected{border-color:var(--brown-m);background:var(--brown-l);font-weight:500}
+    .privacy-note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 12px;
+      line-height: 1.6
+    }
 
-  select,input[type=text],input[type=number],textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:14px;font-family:inherit;background:var(--bg);color:var(--text);outline:none;transition:border 0.2s}
-  select:focus,input[type=text]:focus,textarea:focus{border-color:var(--brown-m);background:#fff}
-  textarea{min-height:80px;resize:vertical}
+    .thankyou {
+      display: none;
+      text-align: center;
+      padding: 60px 24px;
+      max-width: 480px;
+      margin: 0 auto
+    }
 
-  .scale-row{display:flex;gap:8px;flex-wrap:wrap}
-  .scale-btn{width:52px;height:52px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg);font-size:16px;font-weight:700;cursor:pointer;transition:all 0.18s;font-family:inherit;color:var(--muted)}
-  .scale-btn:hover,.scale-btn.sel{background:var(--brown-m);border-color:var(--brown-m);color:#fff;transform:scale(1.05)}
-  .scale-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--muted)}
+    .thankyou .check {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--brown-l);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px
+    }
 
-  .q-card.invalid .q-text::after{content:" — Tafadhali jibu swali hili";color:var(--red);font-size:12px;font-weight:400;margin-left:4px}
-  .q-card.invalid{border-left:3px solid var(--red)}
+    .thankyou h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--brown)
+    }
 
-  .q-card.slide-in{animation:slideIn 0.3s ease forwards}
-  @keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+    .thankyou p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 12px
+    }
 
-  .submit-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-top:24px;text-align:center}
-  .submit-section p{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6}
-  .submit-btn{background:var(--brown);color:#fff;border:none;padding:14px 40px;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:all 0.2s;width:100%;max-width:320px}
-  .submit-btn:hover{background:var(--brown-d);transform:translateY(-1px)}
-  .submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
-  .privacy-note{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6}
+    .share-box {
+      background: var(--brown-l);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px
+    }
 
-  .thankyou{display:none;text-align:center;padding:60px 24px;max-width:480px;margin:0 auto}
-  .thankyou .check{width:72px;height:72px;border-radius:50%;background:var(--brown-l);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px}
-  .thankyou h2{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;margin-bottom:10px;color:var(--brown)}
-  .thankyou p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:12px}
-  .share-box{background:var(--brown-l);border-radius:12px;padding:16px;margin-top:16px}
-  .share-box p{font-size:13px;color:var(--brown);font-weight:600;margin-bottom:10px}
-  .share-btn{background:var(--brown);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin:4px}
+    .share-box p {
+      font-size: 13px;
+      color: var(--brown);
+      font-weight: 600;
+      margin-bottom: 10px
+    }
 
-  .error-banner{background:#FFEBEE;border:1px solid #FFCDD2;color:var(--red);padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none}
+    .share-btn {
+      background: var(--brown);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      margin: 4px
+    }
 
-  /* Already submitted screen */
-  .already-done{display:none;text-align:center;padding:60px 24px;max-width:480px;margin:0 auto}
-  .already-done .icon{font-size:48px;margin-bottom:16px}
-  .already-done h2{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--brown)}
-  .already-done p{font-size:14px;color:var(--muted);line-height:1.7}
-</style>
+    .error-banner{background:#FFEBEE;border:1px solid #FFCDD2;color:var(--red);padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none}
+
+    /* Section Animations */
+    .section-head {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .section-head.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .q-card {
+      transition: all 0.4s ease;
+    }
+    
+    /* Waitlist Styles */
+    .waitlist-card {
+      background: var(--brown-l);
+      border-left: 4px solid var(--brown-m);
+    }
+    .waitlist-card .q-text { color: var(--brown-d); }
+
+    /* Already submitted screen */
+    .already-done {
+      display: none;
+      text-align: center;
+      padding: 60px 24px;
+      max-width: 480px;
+      margin: 0 auto
+    }
+
+    .already-done .icon {
+      font-size: 48px;
+      margin-bottom: 16px
+    }
+
+    .already-done h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--brown)
+    }
+
+    .already-done p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="header">
-  <div class="logo">Utafiti wa Hiari · Tanzania 2026</div>
-  <h1>Uzoefu Wako wa Kutafuta<br><span>Nyumba Tanzania</span></h1>
-  <p>Utafiti wa kitaaluma kuhusu hali ya kutafuta nyumba za kupanga. Hakuna jibu baya — tunataka uzoefu wako wa kweli. Inachukua dakika 5 hadi 7 tu.</p>
-  <div class="header-meta">
-    <span>⏱ Dakika 5–7</span>
-    <span>🔒 Siri kabisa</span>
-    <span>🇹🇿 Tanzania nzima</span>
+  <div class="header">
+    <div class="logo">Utafiti wa Hiari · Tanzania 2026</div>
+    <h1>Uzoefu Wako wa Kutafuta<br><span>Nyumba Tanzania</span></h1>
+    <p>Utafiti wa kitaaluma kuhusu hali ya kutafuta nyumba za kupanga. Hakuna jibu baya — tunataka uzoefu wako wa kweli.
+      Inachukua dakika 5 hadi 7 tu.</p>
+    <div class="header-meta">
+      <span>⏱ Dakika 5–7</span>
+      <span>🔒 Siri kabisa</span>
+      <span>🇹🇿 Tanzania nzima</span>
+    </div>
   </div>
-</div>
 
-<div class="progress-wrap">
-  <div class="progress-inner">
-    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
-    <div class="progress-label" id="prog-label">0 / 0 maswali</div>
+  <div class="progress-wrap">
+    <div class="progress-inner">
+      <div class="progress-bar">
+        <div class="progress-fill" id="prog-fill"></div>
+      </div>
+      <div class="progress-label" id="prog-label">0 / 0 maswali</div>
+    </div>
   </div>
-</div>
 
-<!-- ALREADY SUBMITTED SCREEN -->
-<div class="already-done" id="already-done">
-  <div class="icon">🙏</div>
-  <h2>Umeshajaza fomu hii!</h2>
-  <p>Majibu yako tayari yamehifadhiwa. Utafiti huu unaweza kujazwa mara moja tu kwa kila kifaa. Asante sana kwa ushiriki wako!</p>
-  <div class="share-box" style="margin-top:24px">
-    <p>Saidia zaidi kwa kushirikisha utafiti huu 👇</p>
-    <button class="share-btn" onclick="shareWA()">📲 Shiriki WhatsApp</button>
-    <button class="share-btn" onclick="shareFB()">👥 Shiriki Facebook</button>
+  <!-- ALREADY SUBMITTED SCREEN -->
+  <div class="already-done" id="already-done">
+    <div class="icon">🙏</div>
+    <h2>Umeshajaza fomu hii!</h2>
+    <p>Majibu yako tayari yamehifadhiwa. Utafiti huu unaweza kujazwa mara moja tu kwa kila kifaa. Asante sana kwa
+      ushiriki wako!</p>
+    <div class="share-box" style="margin-top:24px">
+      <p>Saidia zaidi kwa kushirikisha utafiti huu 👇</p>
+      <button class="share-btn" onclick="shareWA()">📲 Shiriki WhatsApp</button>
+      <button class="share-btn" onclick="shareFB()">👥 Shiriki Facebook</button>
+    </div>
   </div>
-</div>
 
-<!-- MAIN FORM -->
-<div class="form-wrap" id="form-main">
-  <div class="error-banner" id="error-banner"></div>
+  <!-- MAIN FORM -->
+  <div class="form-wrap" id="form-main">
+    <div class="error-banner" id="error-banner"></div>
 
-  <!-- ══════════════════════════════════
+    <!-- ══════════════════════════════════
        SEHEMU A — Habari za msingi
   ══════════════════════════════════ -->
-  <div class="section-head" id="sec-A">
-    <div class="section-num">Sehemu A</div>
-    <h2>Habari zako za msingi</h2>
-  </div>
-
-  <!-- Q1: Mkoa -->
-  <div class="q-card" data-q="1" data-required="true">
-    <div class="q-num">Swali 1</div>
-    <div class="q-text">Unaishi mkoa gani sasa hivi?<span class="q-required">*</span></div>
-    <div class="q-hint">Chagua mkoa unaokaa sasa</div>
-    <select id="q1" onchange="updateProgress();applyConditional()">
-      <option value="">— Chagua mkoa —</option>
-      <option>Dar es Salaam</option><option>Arusha</option><option>Mwanza</option>
-      <option>Dodoma</option><option>Tanga</option><option>Mbeya</option>
-      <option>Morogoro</option><option>Zanzibar</option><option>Kilimanjaro</option>
-      <option>Pwani</option><option>Lindi</option><option>Mtwara</option>
-      <option>Ruvuma</option><option>Iringa</option><option>Songwe</option>
-      <option>Njombe</option><option>Katavi</option><option>Tabora</option>
-      <option>Singida</option><option>Shinyanga</option><option>Kagera</option>
-      <option>Geita</option><option>Simiyu</option><option>Mara</option>
-      <option>Rukwa</option><option>Kigoma</option><option>Manyara</option>
-      <option>Mkoa mwingine</option>
-    </select>
-  </div>
-
-  <!-- Q2: Kazi -->
-  <div class="q-card" data-q="2" data-required="true">
-    <div class="q-num">Swali 2</div>
-    <div class="q-text">Kazi yako ni nini kwa sasa?<span class="q-required">*</span></div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q2" value="Mwanafunzi" onchange="updateProgress();applyConditional()"> Mwanafunzi</label>
-      <label class="option"><input type="radio" name="q2" value="Mfanyakazi wa serikali" onchange="updateProgress();applyConditional()"> Mfanyakazi wa serikali</label>
-      <label class="option"><input type="radio" name="q2" value="Mfanyakazi wa sekta binafsi" onchange="updateProgress();applyConditional()"> Mfanyakazi wa sekta binafsi</label>
-      <label class="option"><input type="radio" name="q2" value="Mfanyabiashara" onchange="updateProgress();applyConditional()"> Mfanyabiashara (self-employed)</label>
-      <label class="option"><input type="radio" name="q2" value="Sijaajiriwa" onchange="updateProgress();applyConditional()"> Sijaajiriwa sasa hivi</label>
+    <div class="section-head" id="sec-A">
+      <div class="section-num">Sehemu A</div>
+      <h2>Habari zako za msingi</h2>
     </div>
-  </div>
 
-  <!-- Q3: Hali ya makazi -->
-  <div class="q-card" data-q="3" data-required="true">
-    <div class="q-num">Swali 3</div>
-    <div class="q-text">Je, kwa sasa umepanga nyumba au una nyumba yako mwenyewe?<span class="q-required">*</span></div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q3" value="Ninapanga" onchange="updateProgress();applyConditional()"> Nimepanga nyumba / chumba</label>
-      <label class="option"><input type="radio" name="q3" value="Ninaishi na familia" onchange="updateProgress();applyConditional()"> Ninaishi na familia (silipii pango)</label>
-      <label class="option"><input type="radio" name="q3" value="Nina nyumba yangu" onchange="updateProgress();applyConditional()"> Nina nyumba yangu mwenyewe</label>
-      <label class="option"><input type="radio" name="q3" value="Ninatafuta" onchange="updateProgress();applyConditional()"> Ninatafuta nyumba sasa hivi</label>
+    <!-- Q1: Mkoa -->
+    <div class="q-card" data-q="1" data-required="true">
+      <div class="q-num">Swali 1</div>
+      <div class="q-text">Unaishi mkoa gani sasa hivi?<span class="q-required">*</span></div>
+      <div class="q-hint">Chagua mkoa unaokaa sasa</div>
+      <select id="q1" onchange="updateProgress();applyConditional();saveDraft()">
+        <option value="">— Chagua mkoa —</option>
+        <option>Dar es Salaam</option>
+        <option>Arusha</option>
+        <option>Mwanza</option>
+        <option>Dodoma</option>
+        <option>Tanga</option>
+        <option>Mbeya</option>
+        <option>Morogoro</option>
+        <option>Zanzibar</option>
+        <option>Kilimanjaro</option>
+        <option>Pwani</option>
+        <option>Lindi</option>
+        <option>Mtwara</option>
+        <option>Ruvuma</option>
+        <option>Iringa</option>
+        <option>Songwe</option>
+        <option>Njombe</option>
+        <option>Katavi</option>
+        <option>Tabora</option>
+        <option>Singida</option>
+        <option>Shinyanga</option>
+        <option>Kagera</option>
+        <option>Geita</option>
+        <option>Simiyu</option>
+        <option>Mara</option>
+        <option>Rukwa</option>
+        <option>Kigoma</option>
+        <option>Manyara</option>
+        <option>Mkoa mwingine</option>
+      </select>
     </div>
-  </div>
 
-  <!--
+    <!-- Q2: Kazi -->
+    <div class="q-card" data-q="2" data-required="true">
+      <div class="q-num">Swali 2</div>
+      <div class="q-text">Kazi yako ni nini kwa sasa?<span class="q-required">*</span></div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q2" value="Mwanafunzi"
+            onchange="updateProgress();applyConditional();saveDraft()"> Mwanafunzi</label>
+        <label class="option"><input type="radio" name="q2" value="Mfanyakazi wa serikali"
+            onchange="updateProgress();applyConditional();saveDraft()"> Mfanyakazi wa serikali</label>
+        <label class="option"><input type="radio" name="q2" value="Mfanyakazi wa sekta binafsi"
+            onchange="updateProgress();applyConditional();saveDraft()"> Mfanyakazi wa sekta binafsi</label>
+        <label class="option"><input type="radio" name="q2" value="Mfanyabiashara"
+            onchange="updateProgress();applyConditional();saveDraft()"> Mfanyabiashara (self-employed)</label>
+        <label class="option"><input type="radio" name="q2" value="Sijaajiriwa"
+            onchange="updateProgress();applyConditional();saveDraft()"> Sijaajiriwa sasa hivi</label>
+      </div>
+    </div>
+
+    <!-- Q3: Hali ya makazi -->
+    <div class="q-card" data-q="3" data-required="true">
+      <div class="q-num">Swali 3</div>
+      <div class="q-text">Je, kwa sasa umepanga nyumba au una nyumba yako mwenyewe?<span class="q-required">*</span>
+      </div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q3" value="Ninapanga"
+            onchange="updateProgress();applyConditional();saveDraft()"> Nimepanga nyumba / chumba</label>
+        <label class="option"><input type="radio" name="q3" value="Ninaishi na familia"
+            onchange="updateProgress();applyConditional();saveDraft()"> Ninaishi na familia (silipii pango)</label>
+        <label class="option"><input type="radio" name="q3" value="Nina nyumba yangu"
+            onchange="updateProgress();applyConditional();saveDraft()"> Nina nyumba yangu mwenyewe</label>
+        <label class="option"><input type="radio" name="q3" value="Ninatafuta"
+            onchange="updateProgress();applyConditional();saveDraft()"> Ninatafuta nyumba sasa hivi</label>
+      </div>
+    </div>
+
+    <!--
     Q3b — "Je, umewahi panga?" (huonekana tu kama q3 = "Ninaishi na familia" AU "Nina nyumba yangu")
     Jibu "Hapana" → ruka hadi Sehemu D
     Jibu "Ndiyo" → endelea na maswali yote
   -->
-  <div class="q-card hidden" id="q3b-card" data-q="3b" data-required="true">
-    <div class="q-num">Swali 3b</div>
-    <div class="q-text">Je, umewahi kupanga nyumba au chumba zamani?<span class="q-required">*</span></div>
-    <div class="q-hint">Jibu lako litaamua maswali yanayofuata</div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q3b" value="Ndiyo" onchange="updateProgress();applyConditional()"> Ndiyo, niliwahi kupanga</label>
-      <label class="option"><input type="radio" name="q3b" value="Hapana" onchange="updateProgress();applyConditional()"> Hapana, sijawahi kupanga</label>
+    <div class="q-card hidden" id="q3b-card" data-q="3b" data-required="true">
+      <div class="q-num">Swali 3b</div>
+      <div class="q-text">Je, umewahi kupanga nyumba au chumba zamani?<span class="q-required">*</span></div>
+      <div class="q-hint">Jibu lako litaamua maswali yanayofuata</div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q3b" value="Ndiyo"
+            onchange="updateProgress();applyConditional();saveDraft()"> Ndiyo, niliwahi kupanga</label>
+        <label class="option"><input type="radio" name="q3b" value="Hapana"
+            onchange="updateProgress();applyConditional();saveDraft()"> Hapana, sijawahi kupanga</label>
+      </div>
     </div>
-  </div>
 
-  <!-- Q4: Pango — inaonekana tu kama q3 = "Ninapanga" -->
-  <div class="q-card hidden" id="q4-card" data-q="4">
-    <div class="q-num">Swali 4</div>
-    <div class="q-text">Pango unalolipa kila mwezi ni kiasi gani (TZS)?</div>
-    <div class="q-hint">Swali hili linakuhusu kwa sababu unasema unapanga</div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q4" value="<50k" onchange="updateProgress()"> Chini ya TZS 50,000</label>
-      <label class="option"><input type="radio" name="q4" value="50k-150k" onchange="updateProgress()"> TZS 50,000 – 150,000</label>
-      <label class="option"><input type="radio" name="q4" value="150k-400k" onchange="updateProgress()"> TZS 160,000 – 400,000</label>
-      <label class="option"><input type="radio" name="q4" value="400k-700k" onchange="updateProgress()"> TZS 410,000 – 700,000</label>
-      <label class="option"><input type="radio" name="q4" value=">700k" onchange="updateProgress()"> Zaidi ya TZS 710,000</label>
+    <!-- Q4: Pango — inaonekana tu kama q3 = "Ninapanga" -->
+    <div class="q-card hidden" id="q4-card" data-q="4">
+      <div class="q-num">Swali 4</div>
+      <div class="q-text">Pango unalolipa kila mwezi ni kiasi gani (TZS)?</div>
+      <div class="q-hint">Swali hili linakuhusu kwa sababu unasema unapanga</div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q4" value="<50k" onchange="updateProgress();saveDraft()"> Chini ya TZS
+          50,000</label>
+        <label class="option"><input type="radio" name="q4" value="50k-150k" onchange="updateProgress();saveDraft()"> TZS 50,000 –
+          150,000</label>
+        <label class="option"><input type="radio" name="q4" value="150k-400k" onchange="updateProgress();saveDraft()"> TZS 160,000 –
+          400,000</label>
+        <label class="option"><input type="radio" name="q4" value="400k-700k" onchange="updateProgress();saveDraft()"> TZS 410,000 –
+          700,000</label>
+        <label class="option"><input type="radio" name="q4" value=">700k" onchange="updateProgress();saveDraft()"> Zaidi ya TZS
+          710,000</label>
+      </div>
     </div>
-  </div>
 
-  <!-- ══════════════════════════════════
+    <!-- ══════════════════════════════════
        SEHEMU B — Jinsi ya kutafuta
        (Inaonekana tu kwa: Ninapanga, au waliowahi panga)
        HAIONEKANI kwa: Ninatafuta / Familia/Nyumba yao bila kupanga
   ══════════════════════════════════ -->
-  <div class="section-head hidden" id="sec-B">
-    <div class="section-num">Sehemu B</div>
-    <h2>Jinsi unavyotafuta nyumba</h2>
-  </div>
-
-  <!-- Q5: Njia — HAIULIZWI kama "Ninatafuta" -->
-  <div class="q-card hidden" id="q5-card" data-q="5" data-required="true">
-    <div class="q-num">Swali 5</div>
-    <div class="q-text">Mara ya mwisho ulipotafuta nyumba, ulitumia njia gani?<span class="q-required">*</span></div>
-    <div class="q-hint">Chagua zote zinazokufaa</div>
-    <div class="check-group">
-      <label class="option"><input type="checkbox" name="q5" value="Dalali" onchange="updateProgress();applyConditional()"> Dalali / wakala</label>
-      <label class="option"><input type="checkbox" name="q5" value="Marafiki/familia" onchange="updateProgress();applyConditional()"> Marafiki au familia walinikumbusha</label>
-      <label class="option"><input type="checkbox" name="q5" value="Facebook/WhatsApp" onchange="updateProgress();applyConditional()"> Matangazo ya Facebook / WhatsApp groups</label>
-      <label class="option"><input type="checkbox" name="q5" value="Kutembea" onchange="updateProgress();applyConditional()"> Kutembea mitaani kuangalia vibao</label>
-      <label class="option"><input type="checkbox" name="q5" value="Tovuti/App" onchange="updateProgress();applyConditional()"> Tovuti au app (Lamudi, Zoom Tanzania, n.k.)</label>
-      <label class="option"><input type="checkbox" name="q5" value="Nyingine" onchange="updateProgress();applyConditional()"> Njia nyingine</label>
+    <div class="section-head hidden" id="sec-B">
+      <div class="section-num">Sehemu B</div>
+      <h2>Jinsi unavyotafuta nyumba</h2>
     </div>
-  </div>
 
-  <!-- Q6: Muda — HAIULIZWI kama "Ninatafuta" -->
-  <div class="q-card hidden" id="q6-card" data-q="6" data-required="true">
-    <div class="q-num">Swali 6</div>
-    <div class="q-text">Ulitumia muda gani kutafuta nyumba ya mwisho uliyoipata?<span class="q-required">*</span></div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q6" value="<1 wiki" onchange="updateProgress()"> Chini ya wiki moja</label>
-      <label class="option"><input type="radio" name="q6" value="1-2 wiki" onchange="updateProgress()"> Wiki 1 – 2</label>
-      <label class="option"><input type="radio" name="q6" value="3-4 wiki" onchange="updateProgress()"> Wiki 3 – 4</label>
-      <label class="option"><input type="radio" name="q6" value="1-3 miezi" onchange="updateProgress()"> Miezi 1 – 3</label>
-      <label class="option"><input type="radio" name="q6" value=">3 miezi" onchange="updateProgress()"> Zaidi ya miezi 3</label>
+    <!-- Q5: Njia — HAIULIZWI kama "Ninatafuta" -->
+    <div class="q-card hidden" id="q5-card" data-q="5" data-required="true">
+      <div class="q-num">Swali 5</div>
+      <div class="q-text">Mara ya mwisho ulipotafuta nyumba, ulitumia njia gani?<span class="q-required">*</span></div>
+      <div class="q-hint">Chagua zote zinazokufaa</div>
+      <div class="check-group">
+        <label class="option"><input type="checkbox" name="q5" value="Dalali"
+            onchange="updateProgress();applyConditional();saveDraft()"> Dalali / wakala</label>
+        <label class="option"><input type="checkbox" name="q5" value="Marafiki/familia"
+            onchange="updateProgress();applyConditional();saveDraft()"> Marafiki au familia walinikumbusha</label>
+        <label class="option"><input type="checkbox" name="q5" value="Facebook/WhatsApp"
+            onchange="updateProgress();applyConditional();saveDraft()"> Matangazo ya Facebook / WhatsApp groups</label>
+        <label class="option"><input type="checkbox" name="q5" value="Kutembea"
+            onchange="updateProgress();applyConditional();saveDraft()"> Kutembea mitaani kuangalia vibao</label>
+        <label class="option"><input type="checkbox" name="q5" value="Tovuti/App"
+            onchange="updateProgress();applyConditional();saveDraft()"> Tovuti au app (Lamudi, Zoom Tanzania, n.k.)</label>
+        <label class="option"><input type="checkbox" name="q5" value="Nyingine"
+            onchange="updateProgress();applyConditional();saveDraft()"> Njia nyingine</label>
+      </div>
     </div>
-  </div>
 
-  <!-- Q7: Dalali — inaonekana tu kama q5 lina chaguo "Dalali" -->
-  <div class="q-card hidden" id="q7-card" data-q="7" data-required="true">
-    <div class="q-num">Swali 7</div>
-    <div class="q-text">Je, ulitumia dalali kupata nyumba yako?<span class="q-required">*</span></div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q7" value="Ndiyo, nilazimika" onchange="updateProgress();applyConditional()"> Ndiyo, nililazimika kutumia dalali</label>
-      <label class="option"><input type="radio" name="q7" value="Ndiyo, nilichagua" onchange="updateProgress();applyConditional()"> Ndiyo, nilichagua mwenyewe kutumia dalali</label>
-      <label class="option"><input type="radio" name="q7" value="Hapana" onchange="updateProgress();applyConditional()"> Hapana, nilipata nyumba bila dalali</label>
+    <!-- Q6: Muda — HAIULIZWI kama "Ninatafuta" -->
+    <div class="q-card hidden" id="q6-card" data-q="6" data-required="true">
+      <div class="q-num">Swali 6</div>
+      <div class="q-text">Ulitumia muda gani kutafuta nyumba ya mwisho uliyoipata?<span class="q-required">*</span>
+      </div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q6" value="<1 wiki" onchange="updateProgress();saveDraft()"> Chini ya wiki
+          moja</label>
+        <label class="option"><input type="radio" name="q6" value="1-2 wiki" onchange="updateProgress();saveDraft()"> Wiki 1 –
+          2</label>
+        <label class="option"><input type="radio" name="q6" value="3-4 wiki" onchange="updateProgress();saveDraft()"> Wiki 3 –
+          4</label>
+        <label class="option"><input type="radio" name="q6" value="1-3 miezi" onchange="updateProgress();saveDraft()"> Miezi 1 –
+          3</label>
+        <label class="option"><input type="radio" name="q6" value=">3 miezi" onchange="updateProgress();saveDraft()"> Zaidi ya miezi
+          3</label>
+      </div>
     </div>
-  </div>
 
-  <!-- Q8: Ada ya dalali — inaonekana tu kama q7 = Ndiyo -->
-  <div class="q-card hidden" id="q8-card" data-q="8">
-    <div class="q-num">Swali 8</div>
-    <div class="q-text">Dalali alikulipisha kiasi gani?</div>
-    <div class="q-hint">Swali hili linakuhusu kwa sababu ulisema ulitumia dalali</div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q8" value="<50k" onchange="updateProgress()"> Chini ya TZS 50,000</label>
-      <label class="option"><input type="radio" name="q8" value="50k-100k" onchange="updateProgress()"> TZS 50,000 – 100,000</label>
-      <label class="option"><input type="radio" name="q8" value="Nusu pango" onchange="updateProgress()"> Nusu ya pango moja (kama 100k – 200k)</label>
-      <label class="option"><input type="radio" name="q8" value="Pango kamili" onchange="updateProgress()"> Pango kamili moja (kama 200k – 400k+)</label>
-      <label class="option"><input type="radio" name="q8" value="Zaidi ya pango moja" onchange="updateProgress()"> Zaidi ya pango moja</label>
+    <!-- Q7: Dalali — inaonekana tu kama q5 lina chaguo "Dalali" -->
+    <div class="q-card hidden" id="q7-card" data-q="7" data-required="true">
+      <div class="q-num">Swali 7</div>
+      <div class="q-text">Je, ulitumia dalali kupata nyumba yako?<span class="q-required">*</span></div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q7" value="Ndiyo, nilazimika"
+            onchange="updateProgress();applyConditional();saveDraft()"> Ndiyo, nililazimika kutumia dalali</label>
+        <label class="option"><input type="radio" name="q7" value="Ndiyo, nilichagua"
+            onchange="updateProgress();applyConditional();saveDraft()"> Ndiyo, nilichagua mwenyewe kutumia dalali</label>
+        <label class="option"><input type="radio" name="q7" value="Hapana"
+            onchange="updateProgress();applyConditional();saveDraft()"> Hapana, nilipata nyumba bila dalali</label>
+      </div>
     </div>
-  </div>
 
-  <!-- Q9: Matatizo — HAIULIZWI kama "Ninatafuta" -->
-  <div class="q-card hidden" id="q9-card" data-q="9" data-required="true">
-    <div class="q-num">Swali 9</div>
-    <div class="q-text">Ulikutana na matatizo gani wakati wa kutafuta nyumba?<span class="q-required">*</span></div>
-    <div class="q-hint">Chagua yote yanayokufaa</div>
-    <div class="check-group">
-      <label class="option"><input type="checkbox" name="q9" value="Ada dalali ghali" onchange="updateProgress()"> Ada za dalali ni ghali sana</label>
-      <label class="option"><input type="checkbox" name="q9" value="Picha si kweli" onchange="updateProgress()"> Nyumba haikuwa kama ilivyoonyeshwa kwenye picha</label>
-      <label class="option"><input type="checkbox" name="q9" value="Mwenye nyumba mgumu" onchange="updateProgress()"> Mwenye nyumba alikuwa mgumu kuwasiliana naye</label>
-      <label class="option"><input type="checkbox" name="q9" value="Deposit ilipotea" onchange="updateProgress()"> Deposit ilipotea au haikurudishwa</label>
-      <label class="option"><input type="checkbox" name="q9" value="Bei ilibadilika" onchange="updateProgress()"> Bei ya pango ilibadilika baada ya kukubaliana</label>
-      <label class="option"><input type="checkbox" name="q9" value="Nyumba hazikupatikana" onchange="updateProgress()"> Nyumba nyingi zilionyeshwa lakini hazikupatikana tena</label>
-      <label class="option"><input type="checkbox" name="q9" value="Hakuna mkataba" onchange="updateProgress()"> Sikupata mkataba wowote wa maandishi</label>
-      <label class="option"><input type="checkbox" name="q9" value="Hakuna tatizo" onchange="updateProgress()"> Hakukuwa na tatizo lolote</label>
+    <!-- Q8: Ada ya dalali — inaonekana tu kama q7 = Ndiyo -->
+    <div class="q-card hidden" id="q8-card" data-q="8">
+      <div class="q-num">Swali 8</div>
+      <div class="q-text">Dalali alikulipisha kiasi gani?</div>
+      <div class="q-hint">Swali hili linakuhusu kwa sababu ulisema ulitumia dalali</div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q8" value="<50k" onchange="updateProgress();saveDraft()"> Chini ya TZS
+          50,000</label>
+        <label class="option"><input type="radio" name="q8" value="50k-100k" onchange="updateProgress();saveDraft()"> TZS 50,000 –
+          100,000</label>
+        <label class="option"><input type="radio" name="q8" value="Nusu pango" onchange="updateProgress();saveDraft()"> Nusu ya
+          pango moja (kama 100k – 200k)</label>
+        <label class="option"><input type="radio" name="q8" value="Pango kamili" onchange="updateProgress();saveDraft()"> Pango
+          kamili moja (kama 200k – 400k+)</label>
+        <label class="option"><input type="radio" name="q8" value="Zaidi ya pango moja" onchange="updateProgress();saveDraft()">
+          Zaidi ya pango moja</label>
+      </div>
     </div>
-  </div>
 
-  <!-- ══════════════════════════════════
+    <!-- Q9: Matatizo — HAIULIZWI kama "Ninatafuta" -->
+    <div class="q-card hidden" id="q9-card" data-q="9" data-required="true">
+      <div class="q-num">Swali 9</div>
+      <div class="q-text">Ulikutana na matatizo gani wakati wa kutafuta nyumba?<span class="q-required">*</span></div>
+      <div class="q-hint">Chagua yote yanayokufaa</div>
+      <div class="check-group">
+        <label class="option"><input type="checkbox" name="q9" value="Ada dalali ghali" onchange="updateProgress();saveDraft()"> Ada
+          za dalali ni ghali sana</label>
+        <label class="option"><input type="checkbox" name="q9" value="Picha si kweli" onchange="updateProgress();saveDraft()">
+          Nyumba haikuwa kama ilivyoonyeshwa kwenye picha</label>
+        <label class="option"><input type="checkbox" name="q9" value="Mwenye nyumba mgumu" onchange="updateProgress();saveDraft()">
+          Mwenye nyumba alikuwa mgumu kuwasiliana naye</label>
+        <label class="option"><input type="checkbox" name="q9" value="Deposit ilipotea" onchange="updateProgress();saveDraft()">
+          Deposit ilipotea au haikurudishwa</label>
+        <label class="option"><input type="checkbox" name="q9" value="Bei ilibadilika" onchange="updateProgress();saveDraft()"> Bei
+          ya pango ilibadilika baada ya kukubaliana</label>
+        <label class="option"><input type="checkbox" name="q9" value="Nyumba hazikupatikana"
+            onchange="updateProgress();saveDraft()"> Nyumba nyingi zilionyeshwa lakini hazikupatikana tena</label>
+        <label class="option"><input type="checkbox" name="q9" value="Hakuna mkataba" onchange="updateProgress();saveDraft()">
+          Sikupata mkataba wowote wa maandishi</label>
+        <label class="option"><input type="checkbox" name="q9" value="Hakuna tatizo" onchange="updateProgress();saveDraft()">
+          Hakukuwa na tatizo lolote</label>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
        SEHEMU C — Imani na usalama
        (HAIONYESHWI kama "Ninatafuta",
         au familia/nyumba yao bila kupanga)
   ══════════════════════════════════ -->
-  <div class="section-head hidden" id="sec-C">
-    <div class="section-num">Sehemu C</div>
-    <h2>Imani na usalama</h2>
-  </div>
-
-  <div class="q-card hidden" id="q10-card" data-q="10" data-required="true">
-    <div class="q-num">Swali 10</div>
-    <div class="q-text">Je, uliwahi kukutana na nyumba ya uongo (scam) ulipotafuta?<span class="q-required">*</span></div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q10" value="Ndiyo, niliathirika" onchange="updateProgress();applyConditional()"> Ndiyo, niliathirika mwenyewe</label>
-      <label class="option"><input type="radio" name="q10" value="Ndiyo, niliona tu" onchange="updateProgress();applyConditional()"> Ndiyo, niliona lakini sikuathirika</label>
-      <label class="option"><input type="radio" name="q10" value="Sijawahi" onchange="updateProgress();applyConditional()"> Sijawahi kukutana na hali kama hiyo</label>
+    <div class="section-head hidden" id="sec-C">
+      <div class="section-num">Sehemu C</div>
+      <h2>Imani na usalama</h2>
     </div>
-  </div>
 
-  <!-- Q10b: inaonekana tu kama q10 = niliathirika -->
-  <div class="q-card hidden" id="q10b-card" data-q="10b">
-    <div class="q-num">Swali 10b</div>
-    <div class="q-text">Ulipoteza kiasi gani kwenye scam hiyo?</div>
-    <div class="q-hint">Asante kwa uwazi wako — hii itasaidia sana utafiti huu</div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q10b" value="<50k" onchange="updateProgress()"> Chini ya TZS 50,000</label>
-      <label class="option"><input type="radio" name="q10b" value="50k-200k" onchange="updateProgress()"> TZS 50,000 – 200,000</label>
-      <label class="option"><input type="radio" name="q10b" value="200k-500k" onchange="updateProgress()"> TZS 200,000 – 500,000</label>
-      <label class="option"><input type="radio" name="q10b" value=">500k" onchange="updateProgress()"> Zaidi ya TZS 500,000</label>
-      <label class="option"><input type="radio" name="q10b" value="Sijakumbuka" onchange="updateProgress()"> Sijakumbuka / sitaki kusema</label>
+    <div class="q-card hidden" id="q10-card" data-q="10" data-required="true">
+      <div class="q-num">Swali 10</div>
+      <div class="q-text">Je, uliwahi kukutana na nyumba ya uongo (scam) ulipotafuta?<span class="q-required">*</span>
+      </div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q10" value="Ndiyo, niliathirika"
+            onchange="updateProgress();applyConditional();saveDraft()"> Ndiyo, niliathirika mwenyewe</label>
+        <label class="option"><input type="radio" name="q10" value="Ndiyo, niliona tu"
+            onchange="updateProgress();applyConditional();saveDraft()"> Ndiyo, niliona lakini sikuathirika</label>
+        <label class="option"><input type="radio" name="q10" value="Sijawahi"
+            onchange="updateProgress();applyConditional();saveDraft()"> Sijawahi kukutana na hali kama hiyo</label>
+      </div>
     </div>
-  </div>
 
-  <div class="q-card hidden" id="q11-card" data-q="11" data-required="true">
-    <div class="q-num">Swali 11</div>
-    <div class="q-text">Kitu gani kinakufanya ukubaliane na mwenye nyumba bila wasiwasi?<span class="q-required">*</span></div>
-    <div class="q-hint">Chagua vitatu (3) vinavyokusaidia zaidi</div>
-    <div class="check-group">
-      <label class="option"><input type="checkbox" name="q11" value="NIDA" onchange="updateProgress()"> Kuona kitambulisho chake cha NIDA</label>
-      <label class="option"><input type="checkbox" name="q11" value="Reviews" onchange="updateProgress()"> Maoni (reviews) kutoka kwa wapangaji wengine</label>
-      <label class="option"><input type="checkbox" name="q11" value="Mkataba" onchange="updateProgress()"> Mkataba wa maandishi (hata kwa simu)</label>
-      <label class="option"><input type="checkbox" name="q11" value="Rafiki/familia" onchange="updateProgress()"> Niliambiwa na rafiki au familia</label>
-      <label class="option"><input type="checkbox" name="q11" value="Kuona nyumba" onchange="updateProgress()"> Kuona nyumba mwenyewe kabla ya kulipa</label>
-      <label class="option"><input type="checkbox" name="q11" value="Anaishi karibu" onchange="updateProgress()"> Mwenye nyumba anaishi karibu na nyumba hiyo</label>
-      <label class="option"><input type="checkbox" name="q11" value="Verified badge" onchange="updateProgress()"> Alama ya uthibitisho (verified) kwenye app au tovuti</label>
+    <!-- Q10b: inaonekana tu kama q10 = niliathirika -->
+    <div class="q-card hidden" id="q10b-card" data-q="10b">
+      <div class="q-num">Swali 10b</div>
+      <div class="q-text">Ulipoteza kiasi gani kwenye scam hiyo?</div>
+      <div class="q-hint">Asante kwa uwazi wako — hii itasaidia sana utafiti huu</div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q10b" value="<50k" onchange="updateProgress();saveDraft()"> Chini ya TZS
+          50,000</label>
+        <label class="option"><input type="radio" name="q10b" value="50k-200k" onchange="updateProgress();saveDraft()"> TZS 50,000 –
+          200,000</label>
+        <label class="option"><input type="radio" name="q10b" value="200k-500k" onchange="updateProgress();saveDraft()"> TZS 200,000
+          – 500,000</label>
+        <label class="option"><input type="radio" name="q10b" value=">500k" onchange="updateProgress();saveDraft()"> Zaidi ya TZS
+          500,000</label>
+        <label class="option"><input type="radio" name="q10b" value="Sijakumbuka" onchange="updateProgress();saveDraft()">
+          Sijakumbuka / sitaki kusema</label>
+      </div>
     </div>
-  </div>
 
-  <div class="q-card hidden" id="q12-card" data-q="12" data-required="true">
-    <div class="q-num">Swali 12</div>
-    <div class="q-text">Ungependa kulipa deposit yako kupitia app badala ya moja kwa moja?<span class="q-required">*</span></div>
-    <div class="q-hint">Deposit ingehifadhiwa salama na kutolewa tu ukisema umeingia (escrow)</div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q12" value="Ndiyo sana" onchange="updateProgress()"> Ndiyo, hii ingenifariji sana</label>
-      <label class="option"><input type="radio" name="q12" value="Labda" onchange="updateProgress()"> Labda, ningependa kujua zaidi kwanza</label>
-      <label class="option"><input type="radio" name="q12" value="Hapana" onchange="updateProgress()"> Hapana, ninapendelea kulipa moja kwa moja</label>
+    <div class="q-card hidden" id="q11-card" data-q="11" data-required="true">
+      <div class="q-num">Swali 11</div>
+      <div class="q-text">Kitu gani kinakufanya ukubaliane na mwenye nyumba bila wasiwasi?<span
+          class="q-required">*</span></div>
+      <div class="q-hint">Chagua zote zinazokusaidia zaidi katika kumuamini mwenye nyumba.</div>
+      <div class="check-group">
+        <label class="option"><input type="checkbox" name="q11" value="NIDA" onchange="updateProgress();saveDraft()"> Kuona
+          kitambulisho chake cha NIDA</label>
+        <label class="option"><input type="checkbox" name="q11" value="Reviews" onchange="updateProgress();saveDraft()"> Maoni
+          (reviews) kutoka kwa wapangaji wengine</label>
+        <label class="option"><input type="checkbox" name="q11" value="Mkataba" onchange="updateProgress();saveDraft()"> Mkataba wa
+          maandishi (hata kwa simu)</label>
+        <label class="option"><input type="checkbox" name="q11" value="Rafiki/familia" onchange="updateProgress();saveDraft()">
+          Niliambiwa na rafiki au familia</label>
+        <label class="option"><input type="checkbox" name="q11" value="Kuona nyumba" onchange="updateProgress();saveDraft()"> Kuona
+          nyumba mwenyewe kabla ya kulipa</label>
+        <label class="option"><input type="checkbox" name="q11" value="Anaishi karibu" onchange="updateProgress();saveDraft()">
+          Mwenye nyumba anaishi karibu na nyumba hiyo</label>
+        <label class="option"><input type="checkbox" name="q11" value="Verified badge" onchange="updateProgress();saveDraft()">
+          Alama ya uthibitisho (verified) kwenye app au tovuti</label>
+      </div>
     </div>
-  </div>
 
-  <!-- ══════════════════════════════════
+    <div class="q-card hidden" id="q12-card" data-q="12" data-required="true">
+      <div class="q-num">Swali 12</div>
+      <div class="q-text">Ungependa kulipa deposit yako kupitia app badala ya moja kwa moja?<span
+          class="q-required">*</span></div>
+      <div class="q-hint">Deposit ingehifadhiwa salama na kutolewa tu ukisema umeingia (escrow)</div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q12" value="Ndiyo sana" onchange="updateProgress();saveDraft()"> Ndiyo, hii
+          ingenifariji sana</label>
+        <label class="option"><input type="radio" name="q12" value="Labda" onchange="updateProgress();saveDraft()"> Labda,
+          ningependa kujua zaidi kwanza</label>
+        <label class="option"><input type="radio" name="q12" value="Hapana" onchange="updateProgress();saveDraft()"> Hapana,
+          ninapendelea kulipa moja kwa moja</label>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
        SEHEMU D — Teknolojia
        (Inaonekana kwa WOTE)
   ══════════════════════════════════ -->
-  <div class="section-head hidden" id="sec-D">
-    <div class="section-num">Sehemu D</div>
-    <h2>Teknolojia na matumizi ya simu</h2>
-  </div>
-
-  <div class="q-card hidden" id="q13-card" data-q="13" data-required="true">
-    <div class="q-num">Swali 13</div>
-    <div class="q-text">Unatumia simu ya aina gani zaidi?<span class="q-required">*</span></div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q13" value="Android" onchange="updateProgress()"> Android (Samsung, Tecno, Itel, n.k.)</label>
-      <label class="option"><input type="radio" name="q13" value="iPhone" onchange="updateProgress()"> iPhone (Apple)</label>
-      <label class="option"><input type="radio" name="q13" value="Feature phone" onchange="updateProgress()"> Simu ya kawaida (feature phone)</label>
+    <div class="section-head hidden" id="sec-D">
+      <div class="section-num">Sehemu D</div>
+      <h2>Teknolojia na matumizi ya simu</h2>
     </div>
-  </div>
 
-  <div class="q-card hidden" id="q14-card" data-q="14" data-required="true">
-    <div class="q-num">Swali 14</div>
-    <div class="q-text">App zipi unazotumia mara kwa mara?<span class="q-required">*</span></div>
-    <div class="q-hint">Chagua zote</div>
-    <div class="check-group">
-      <label class="option"><input type="checkbox" name="q14" value="WhatsApp" onchange="updateProgress()"> WhatsApp</label>
-      <label class="option"><input type="checkbox" name="q14" value="Facebook" onchange="updateProgress()"> Facebook</label>
-      <label class="option"><input type="checkbox" name="q14" value="TikTok" onchange="updateProgress()"> TikTok</label>
-      <label class="option"><input type="checkbox" name="q14" value="Instagram" onchange="updateProgress()"> Instagram</label>
-      <label class="option"><input type="checkbox" name="q14" value="YouTube" onchange="updateProgress()"> YouTube</label>
-      <label class="option"><input type="checkbox" name="q14" value="M-Pesa/Airtel Money" onchange="updateProgress()"> M-Pesa / Airtel Money</label>
-      <label class="option"><input type="checkbox" name="q14" value="Jumia/Kilimall" onchange="updateProgress()"> Jumia / Kilimall</label>
-      <label class="option"><input type="checkbox" name="q14" value="Bolt/Uber" onchange="updateProgress()"> Bolt / Uber</label>
+    <div class="q-card hidden" id="q13-card" data-q="13" data-required="true">
+      <div class="q-num">Swali 13</div>
+      <div class="q-text">Unatumia simu ya aina gani zaidi?<span class="q-required">*</span></div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q13" value="Android" onchange="updateProgress();saveDraft()"> Android
+          (Samsung, Tecno, Itel, n.k.)</label>
+        <label class="option"><input type="radio" name="q13" value="iPhone" onchange="updateProgress();saveDraft()"> iPhone
+          (Apple)</label>
+        <label class="option"><input type="radio" name="q13" value="Feature phone" onchange="updateProgress();saveDraft()"> Simu ya
+          kawaida (feature phone)</label>
+      </div>
     </div>
-  </div>
 
-  <div class="q-card hidden" id="q15-card" data-q="15" data-required="true">
-    <div class="q-num">Swali 15</div>
-    <div class="q-text">Je, umewahi kutumia tovuti au app kutafuta nyumba?<span class="q-required">*</span></div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q15" value="Ndiyo, ilifanya kazi" onchange="updateProgress()"> Ndiyo, na ilifanya kazi vizuri</label>
-      <label class="option"><input type="radio" name="q15" value="Ndiyo, haikufaa" onchange="updateProgress()"> Ndiyo, lakini haikufaa sana</label>
-      <label class="option"><input type="radio" name="q15" value="Hapana" onchange="updateProgress()"> Hapana, sijawahi jaribu</label>
-      <label class="option"><input type="radio" name="q15" value="Sijui kama ipo" onchange="updateProgress()"> Sijui kama kuna app kama hiyo Tanzania</label>
+    <div class="q-card hidden" id="q14-card" data-q="14" data-required="true">
+      <div class="q-num">Swali 14</div>
+      <div class="q-text">App zipi unazotumia mara kwa mara?<span class="q-required">*</span></div>
+      <div class="q-hint">Chagua zote</div>
+      <div class="check-group">
+        <label class="option"><input type="checkbox" name="q14" value="WhatsApp" onchange="updateProgress();saveDraft()">
+          WhatsApp</label>
+        <label class="option"><input type="checkbox" name="q14" value="Facebook" onchange="updateProgress();saveDraft()">
+          Facebook</label>
+        <label class="option"><input type="checkbox" name="q14" value="TikTok" onchange="updateProgress();saveDraft()">
+          TikTok</label>
+        <label class="option"><input type="checkbox" name="q14" value="Instagram" onchange="updateProgress();saveDraft()">
+          Instagram</label>
+        <label class="option"><input type="checkbox" name="q14" value="YouTube" onchange="updateProgress();saveDraft()">
+          YouTube</label>
+        <label class="option"><input type="checkbox" name="q14" value="M-Pesa/Airtel Money" onchange="updateProgress();saveDraft()">
+          M-Pesa / Airtel Money</label>
+        <label class="option"><input type="checkbox" name="q14" value="Jumia/Kilimall" onchange="updateProgress();saveDraft()">
+          Jumia / Kilimall</label>
+        <label class="option"><input type="checkbox" name="q14" value="Bolt/Uber" onchange="updateProgress();saveDraft()"> Bolt /
+          Uber</label>
+      </div>
     </div>
-  </div>
 
-  <!-- ══════════════════════════════════
+    <div class="q-card hidden" id="q15-card" data-q="15" data-required="true">
+      <div class="q-num">Swali 15</div>
+      <div class="q-text">Je, umewahi kutumia tovuti au app kutafuta nyumba?<span class="q-required">*</span></div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q15" value="Ndiyo, ilifanya kazi" onchange="updateProgress();saveDraft()">
+          Ndiyo, na ilifanya kazi vizuri</label>
+        <label class="option"><input type="radio" name="q15" value="Ndiyo, haikufaa" onchange="updateProgress();saveDraft()"> Ndiyo,
+          lakini haikufaa sana</label>
+        <label class="option"><input type="radio" name="q15" value="Hapana" onchange="updateProgress();saveDraft()"> Hapana,
+          sijawahi jaribu</label>
+        <label class="option"><input type="radio" name="q15" value="Sijui kama ipo" onchange="updateProgress();saveDraft()"> Sijui
+          kama kuna app kama hiyo Tanzania</label>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
        SEHEMU E — App mpya
        (Inaonekana kwa WOTE)
   ══════════════════════════════════ -->
-  <div class="section-head hidden" id="sec-E">
-    <div class="section-num">Sehemu E</div>
-    <h2>Mtazamo wako kuhusu matumizi ya  app ya kupanga </h2>
+    <div class="section-head hidden" id="sec-E">
+      <div class="section-num">Sehemu E</div>
+      <h2>Mtazamo wako kuhusu matumizi ya app ya kupanga</h2>
+    </div>
+
+    <div class="q-card hidden" id="q16-card" data-q="16" data-required="true">
+      <div class="q-num">Swali 16</div>
+      <div class="q-text">Kama kungekua na App inayokuruhusu kutafuta nyumba moja kwa moja na mwenye nyumba — bila
+        dalali. Ungeitumia?<span class="q-required">*</span></div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q16" value="Ndiyo kabisa" onchange="updateProgress();saveDraft()"> Ndiyo
+          kabisa, ningependa sana</label>
+        <label class="option"><input type="radio" name="q16" value="Labda" onchange="updateProgress();saveDraft()"> Labda, nikijua
+          inafanya kazi kweli</label>
+        <label class="option"><input type="radio" name="q16" value="Sidhani" onchange="updateProgress();saveDraft()"> Sidhani —
+          ninapendelea njia za kawaida</label>
+        <label class="option"><input type="radio" name="q16" value="Hapana" onchange="updateProgress();saveDraft()"> Hapana, sioni
+          sababu</label>
+      </div>
+    </div>
+
+    <div class="q-card hidden" id="q17-card" data-q="17" data-required="true">
+      <div class="q-num">Swali 17</div>
+      <div class="q-text">Kitu gani muhimu zaidi kwako ambacho ungependa kukiona kwenye app ya kutafuta nyumba?<span
+          class="q-required">*</span></div>
+      <div class="q-hint">Chagua zote zinazokupendeza zaidi. Kama chaguo lako halikupo kwenye orodha, tafadhali jaza
+        kisanduku cha "Nyingine" hapa chini na uandike pendekezo lako mwenyewe.</div>
+      <div class="check-group">
+        <label class="option"><input type="checkbox" name="q17" value="Picha za kweli" onchange="updateProgress();saveDraft()">
+          Picha za kweli za nyumba</label>
+        <label class="option"><input type="checkbox" name="q17" value="Bei wazi" onchange="updateProgress();saveDraft()"> Bei wazi
+          na ya ukweli</label>
+        <label class="option"><input type="checkbox" name="q17" value="Mawasiliano ya moja kwa moja"
+            onchange="updateProgress();saveDraft()"> Mawasiliano ya moja kwa moja na mwenye nyumba</label>
+        <label class="option"><input type="checkbox" name="q17" value="Verified landlord" onchange="updateProgress();saveDraft()">
+          Uthibitisho wa mwenye nyumba (verified)</label>
+        <label class="option"><input type="checkbox" name="q17" value="Reviews za wapangaji"
+            onchange="updateProgress();saveDraft()"> Maoni ya wapangaji waliokaa hapo kabla</label>
+        <label class="option"><input type="checkbox" name="q17" value="Ramani" onchange="updateProgress();saveDraft()"> Ramani
+          inayoonyesha mahali pa nyumba</label>
+        <label class="option"><input type="checkbox" name="q17" value="Digital contract" onchange="updateProgress();saveDraft()">
+          Mkataba wa kidijitali (digital contract)</label>
+        <label class="option"><input type="checkbox" name="q17" value="App ya haraka" onchange="updateProgress();saveDraft()"> App
+          inayofanya kazi vizuri hata intaneti ikiwa polepole</label>
+        <label class="option"><input type="checkbox" name="q17" value="Nyingine" id="q17-other-chk"
+            onchange="toggleQ17Other();updateProgress();saveDraft()"> Nyingine (chaguo langu halipo hapo juu)</label>
+      </div>
+      <div id="q17-other-wrap" style="display:none;margin-top:10px">
+        <label style="font-size:13px;font-weight:600;color:var(--brown-m);display:block;margin-bottom:6px">📝 Tafadhali
+          eleza pendekezo lako hapa:</label>
+        <input type="text" id="q17-other-text"
+          placeholder="Mfano: Kujulikana kwa historia ya nyumba, Msaada wa lugha ya ishara, n.k."
+          oninput="updateProgress();saveDraft()" style="width:100%">
+      </div>
+    </div>
+
+    <div class="q-card hidden" id="q18-card" data-q="18" data-required="true">
+      <div class="q-num">Swali 18</div>
+      <div class="q-text">Ungekubali kulipa ada ndogo ya mafanikio (TZS 10,000–25,000) ukishapata nyumba kupitia
+        app?<span class="q-required">*</span></div>
+      <div class="q-hint">Kutafuta na kuwasiliana ni bure. Unalipa tu ukipata nyumba kweli</div>
+      <div class="radio-group">
+        <label class="option"><input type="radio" name="q18" value="Ndiyo, sawa" onchange="updateProgress();saveDraft()"> Ndiyo,
+          hiyo ni sawa na ya haki</label>
+        <label class="option"><input type="radio" name="q18" value="Labda" onchange="updateProgress();saveDraft()"> Labda,
+          inategemea ubora wa huduma</label>
+        <label class="option"><input type="radio" name="q18" value="Hapana, bure" onchange="updateProgress();saveDraft()"> Hapana,
+          inapaswa kuwa bure kabisa</label>
+        <label class="option"><input type="radio" name="q18" value="Ada ndogo zaidi" onchange="updateProgress();saveDraft()">
+          Ningekubali ada ndogo zaidi (chini ya TZS 10,000)</label>
+      </div>
+    </div>
+
+    <div class="q-card hidden" id="q19-card" data-q="19" data-required="true">
+      <div class="q-num">Swali 19</div>
+      <div class="q-text">Kwa kipimo cha 1–5, tatizo la kupata nyumba Tanzania ni kubwa kiasi gani kwako?<span
+          class="q-required">*</span></div>
+      <div class="q-hint">1 = Tatizo dogo / 5 = Tatizo kubwa sana</div>
+      <div class="scale-row" id="scale-19"></div>
+      <div class="scale-labels"><span>Tatizo dogo</span><span>Tatizo kubwa sana</span></div>
+    </div>
+
+    <div class="q-card hidden" id="q20-card" data-q="20">
+      <div class="q-num">Swali 20</div>
+      <div class="q-text">Una maoni, wazo, au uzoefu wowote unaotaka kushiriki?</div>
+      <div class="q-hint">Hii ndiyo nafasi yako — sema chochote. Kiswahili au Kiingereza</div>
+      <textarea id="q20" placeholder="Andika hapa..." oninput="updateProgress();saveDraft()"></textarea>
+    </div>
+
+    <!-- Q21: Waitlist & WhatsApp -->
+    <div class="q-card hidden waitlist-card" id="q21-card" data-q="21">
+      <div class="q-num">Hatua ya Mwisho</div>
+      <div class="q-text">Jiunge na listi ya kusubiri (Waitlist) 🚀</div>
+      <div class="q-hint">Tungependa kukujulisha app ikikamilika ili uwe wa kwanza kuitumia bure!</div>
+      <div class="check-group" style="margin-bottom: 12px;">
+        <label class="option">
+          <input type="checkbox" name="q21_waitlist" id="q21_waitlist" onchange="toggleWaitlist();saveDraft()"> 
+          Ndiyo, nitaarifu app ikikamilika
+        </label>
+      </div>
+      <div id="waitlist-wrap" style="display:none; animation: fadeIn 0.3s ease;">
+        <label style="font-size:13px;font-weight:600;color:var(--brown-m);display:block;margin-bottom:6px">📞 Namba yako ya WhatsApp:</label>
+        <input type="text" id="q21_whatsapp" placeholder="Mfano: 0712 345 678" oninput="saveDraft()" style="width:100%">
+      </div>
+    </div>
+
+    <div class="submit-section hidden" id="submit-section">
+      <div class="error-banner" id="error-banner2"></div>
+      <p>Asante kwa muda wako. Majibu yako ni ya thamani sana. Yatatumika kwa madhumuni ya kitaaluma tu — bila
+        kujulikana kwako.</p>
+      <button class="submit-btn" id="submit-btn" onclick="submitForm()">Tuma Majibu Yangu ✓</button>
+      <div class="privacy-note">🔒 Hakuna jina linalohifadhiwa. Majibu yako ni ya siri kabisa.</div>
+      <div class="privacy-note"> &copy; we-link</div>
+    </div>
+  </div>
   </div>
 
-  <div class="q-card hidden" id="q16-card" data-q="16" data-required="true">
-    <div class="q-num">Swali 16</div>
-    <div class="q-text">Kama kungekua na App inayokuruhusu kutafuta nyumba moja kwa moja na mwenye nyumba — bila dalali. Ungeitumia?<span class="q-required">*</span></div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q16" value="Ndiyo kabisa" onchange="updateProgress()"> Ndiyo kabisa, ningependa sana</label>
-      <label class="option"><input type="radio" name="q16" value="Labda" onchange="updateProgress()"> Labda, nikijua inafanya kazi kweli</label>
-      <label class="option"><input type="radio" name="q16" value="Sidhani" onchange="updateProgress()"> Sidhani — ninapendelea njia za kawaida</label>
-      <label class="option"><input type="radio" name="q16" value="Hapana" onchange="updateProgress()"> Hapana, sioni sababu</label>
+  <!-- THANK YOU -->
+  <div class="thankyou" id="thankyou">
+    <div class="check">✓</div>
+    <h2>Asante sana!</h2>
+    <p>Majibu yako yamefika salama. Utafiti huu utasaidia kuelewa changamoto za kupata nyumba za kupanga Tanzania.</p>
+    <p>Matokeo yatashirikishwa hadharani. Asante kwa ushiriki wako!</p>
+    <div class="share-box">
+      <p>Saidia zaidi kwa kushirikisha utafiti huu 👇</p>
+      <button class="share-btn" onclick="shareWA()">📲 Shiriki WhatsApp</button>
+      <button class="share-btn" onclick="shareFB()">👥 Shiriki Facebook</button>
     </div>
   </div>
 
-  <div class="q-card hidden" id="q17-card" data-q="17" data-required="true">
-    <div class="q-num">Swali 17</div>
-    <div class="q-text">Kitu gani muhimu zaidi kwako ambacho ungependa kukiona kwenye app ya kutafuta nyumba?<span class="q-required">*</span></div>
-    <div class="q-hint">Chagua vitatu (3) tu</div>
-    <div class="check-group">
-      <label class="option"><input type="checkbox" name="q17" value="Picha za kweli" onchange="updateProgress()"> Picha za kweli za nyumba</label>
-      <label class="option"><input type="checkbox" name="q17" value="Bei wazi" onchange="updateProgress()"> Bei wazi na ya ukweli</label>
-      <label class="option"><input type="checkbox" name="q17" value="Mawasiliano ya moja kwa moja" onchange="updateProgress()"> Mawasiliano ya moja kwa moja na mwenye nyumba</label>
-      <label class="option"><input type="checkbox" name="q17" value="Verified landlord" onchange="updateProgress()"> Uthibitisho wa mwenye nyumba (verified)</label>
-      <label class="option"><input type="checkbox" name="q17" value="Reviews za wapangaji" onchange="updateProgress()"> Maoni ya wapangaji waliokaa hapo kabla</label>
-      <label class="option"><input type="checkbox" name="q17" value="Ramani" onchange="updateProgress()"> Ramani inayoonyesha mahali pa nyumba</label>
-      <label class="option"><input type="checkbox" name="q17" value="Digital contract" onchange="updateProgress()"> Mkataba wa kidijitali (digital contract)</label>
-      <label class="option"><input type="checkbox" name="q17" value="App ya haraka" onchange="updateProgress()"> App inayofanya kazi vizuri hata intaneti ikiwa polepole</label>
-    </div>
-  </div>
+  <script>
+    // ══════════════════════════════════════════════════
+    // ONE-SUBMISSION LOCK
+    // Angalia kama mtu ameshajaza fomu — onyesha screen ya "umeshajaza"
+    // ══════════════════════════════════════════════════
+    (function checkAlreadySubmitted() {
+      if (localStorage.getItem('utafiti_submitted') === 'true') {
+        document.getElementById('form-main').style.display = 'none';
+        document.getElementById('already-done').style.display = 'block';
+      }
+    })();
 
-  <div class="q-card hidden" id="q18-card" data-q="18" data-required="true">
-    <div class="q-num">Swali 18</div>
-    <div class="q-text">Ungekubali kulipa ada ndogo ya mafanikio (TZS 10,000–25,000) ukishapata nyumba kupitia app?<span class="q-required">*</span></div>
-    <div class="q-hint">Kutafuta na kuwasiliana ni bure. Unalipa tu ukipata nyumba kweli</div>
-    <div class="radio-group">
-      <label class="option"><input type="radio" name="q18" value="Ndiyo, sawa" onchange="updateProgress()"> Ndiyo, hiyo ni sawa na ya haki</label>
-      <label class="option"><input type="radio" name="q18" value="Labda" onchange="updateProgress()"> Labda, inategemea ubora wa huduma</label>
-      <label class="option"><input type="radio" name="q18" value="Hapana, bure" onchange="updateProgress()"> Hapana, inapaswa kuwa bure kabisa</label>
-      <label class="option"><input type="radio" name="q18" value="Ada ndogo zaidi" onchange="updateProgress()"> Ningekubali ada ndogo zaidi (chini ya TZS 10,000)</label>
-    </div>
-  </div>
-
-  <div class="q-card hidden" id="q19-card" data-q="19" data-required="true">
-    <div class="q-num">Swali 19</div>
-    <div class="q-text">Kwa kipimo cha 1–5, tatizo la kupata nyumba Tanzania ni kubwa kiasi gani kwako?<span class="q-required">*</span></div>
-    <div class="q-hint">1 = Tatizo dogo / 5 = Tatizo kubwa sana</div>
-    <div class="scale-row" id="scale-19"></div>
-    <div class="scale-labels"><span>Tatizo dogo</span><span>Tatizo kubwa sana</span></div>
-  </div>
-
-  <div class="q-card hidden" id="q20-card" data-q="20">
-    <div class="q-num">Swali 20</div>
-    <div class="q-text">Una maoni, wazo, au uzoefu wowote unaotaka kushiriki?</div>
-    <div class="q-hint">Hii ndiyo nafasi yako — sema chochote. Kiswahili au Kiingereza</div>
-    <textarea id="q20" placeholder="Andika hapa..." oninput="updateProgress()"></textarea>
-  </div>
-
-  <div class="submit-section hidden" id="submit-section">
-    <div class="error-banner" id="error-banner2"></div>
-    <p>Asante kwa muda wako. Majibu yako ni ya thamani sana. Yatatumika kwa madhumuni ya kitaaluma tu — bila kujulikana kwako.</p>
-    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Tuma Majibu Yangu ✓</button>
-    <div class="privacy-note">🔒 Hakuna jina linalohifadhiwa. Majibu yako ni ya siri kabisa.</div>
-    <div class="privacy-note"> &copy;  we-link</div>.</div>
-  </div>
-</div>
-
-<!-- THANK YOU -->
-<div class="thankyou" id="thankyou">
-  <div class="check">✓</div>
-  <h2>Asante sana!</h2>
-  <p>Majibu yako yamefika salama. Utafiti huu utasaidia kuelewa changamoto za kupata nyumba za kupanga Tanzania.</p>
-  <p>Matokeo yatashirikishwa hadharani. Asante kwa ushiriki wako!</p>
-  <div class="share-box">
-    <p>Saidia zaidi kwa kushirikisha utafiti huu 👇</p>
-    <button class="share-btn" onclick="shareWA()">📲 Shiriki WhatsApp</button>
-    <button class="share-btn" onclick="shareFB()">👥 Shiriki Facebook</button>
-  </div>
-</div>
-
-<script>
-  // ══════════════════════════════════════════════════
-  // ONE-SUBMISSION LOCK
-  // Angalia kama mtu ameshajaza fomu — onyesha screen ya "umeshajaza"
-  // ══════════════════════════════════════════════════
-  (function checkAlreadySubmitted() {
-    if (localStorage.getItem('utafiti_submitted') === 'true') {
-      document.getElementById('form-main').style.display = 'none';
-      document.getElementById('already-done').style.display = 'block';
+    // ── Scale buttons ──
+    function buildScale(id) {
+      const row = document.getElementById('scale-' + id);
+      if (!row) return;
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'scale-btn';
+        btn.textContent = i;
+        btn.dataset.val = i;
+        btn.onclick = function () {
+          row.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('sel'));
+          this.classList.add('sel');
+          updateProgress();
+          saveDraft();
+        };
+        row.appendChild(btn);
+      }
     }
-  })();
+    buildScale(19);
 
-  // ── Scale buttons ──
-  function buildScale(id) {
-    const row = document.getElementById('scale-' + id);
-    if (!row) return;
-    for (let i = 1; i <= 5; i++) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'scale-btn';
-      btn.textContent = i;
-      btn.dataset.val = i;
-      btn.onclick = function () {
-        row.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('sel'));
-        this.classList.add('sel');
-        updateProgress();
-      };
-      row.appendChild(btn);
+    // ── Q17 "Nyingine" toggle ──
+    function toggleQ17Other() {
+      const chk = document.getElementById('q17-other-chk');
+      const wrap = document.getElementById('q17-other-wrap');
+      if (!chk || !wrap) return;
+      wrap.style.display = chk.checked ? 'block' : 'none';
+      if (!chk.checked) {
+        const txt = document.getElementById('q17-other-text');
+        if (txt) txt.value = '';
+      }
     }
-  }
-  buildScale(19);
 
-  // ── Highlight selected options ──
-  document.querySelectorAll('.option input').forEach(inp => {
-    inp.addEventListener('change', function () {
-      const group = this.closest('.radio-group, .check-group');
-      if (!group) return;
-      if (this.type === 'radio') {
-        group.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-        this.closest('.option').classList.add('selected');
+    // ── Highlight selected options ──
+    document.querySelectorAll('.option input').forEach(inp => {
+      inp.addEventListener('change', function () {
+        const group = this.closest('.radio-group, .check-group');
+        if (!group) return;
+        if (this.type === 'radio') {
+          group.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+          this.closest('.option').classList.add('selected');
+        } else {
+          this.closest('.option').classList.toggle('selected', this.checked);
+        }
+      });
+    });
+
+    // ══════════════════════════════════════════════════
+    // CONDITIONAL LOGIC — moyo wa fomu
+    // ══════════════════════════════════════════════════
+
+    function applyConditional() {
+      const q3val = getRadioVal('q3');
+      const q3bval = getRadioVal('q3b');
+      const q7val = getRadioVal('q7');
+      const q10val = getRadioVal('q10');
+      const q5hasdalali = isCheckboxChecked('q5', 'Dalali');
+
+      // ── Determine path ──
+      const isTafuta = q3val === 'Ninatafuta';
+      const isPanga = q3val === 'Ninapanga';
+      const isFamilia = q3val === 'Ninaishi na familia';
+      const isNyumbaYao = q3val === 'Nina nyumba yangu';
+      const needsQ3b = isFamilia || isNyumbaYao;
+
+      // Waliowahi kupanga (familia/nyumba yao + wamejibu "Ndiyo" kwenye Q3b)
+      const waliwahiPanga = needsQ3b && q3bval === 'Ndiyo';
+
+      // Maswali ya Sehemu B (Q5,Q6,Q9) yanaonekana kama:
+      // - Ninapanga, AU
+      // - Familia/NyumbaYao na waliwahiPanga
+      const showSecB = isPanga || waliwahiPanga;
+
+      // Sehemu C inaonekana kama showSecB (yaani wamewahi panga au wanapanga)
+      const showSecC = showSecB;
+
+      // ── Q3b ──
+      toggle('q3b-card', needsQ3b);
+
+      // ── Q4 — pango la sasa (tu kwa Ninapanga) ──
+      toggle('q4-card', isPanga);
+
+      // ── Sehemu B header ──
+      toggleSection('sec-B', showSecB || isTafuta); 
+
+      // ── Q5, Q6, Q9 — HAZIONEKANI kama Ninatafuta ──
+      toggle('q5-card', showSecB);
+      toggle('q6-card', showSecB);
+      toggle('q9-card', showSecB);
+
+      // ── Q7 — inaonekana tu kama q5 imechaguliwa "Dalali" na showSecB ──
+      toggle('q7-card', showSecB && q5hasdalali);
+
+      // ── Q8 — inaonekana tu kama q7 = Ndiyo ──
+      toggle('q8-card', showSecB && q5hasdalali && q7val && q7val.startsWith('Ndiyo'));
+
+      // ── Sehemu C — header na maswali ──
+      toggleSection('sec-C', showSecC);
+      toggle('q10-card', showSecC);
+      toggle('q10b-card', showSecC && q10val === 'Ndiyo, niliathirika');
+      toggle('q11-card', showSecC);
+      toggle('q12-card', showSecC);
+
+      // ── Sehemu D & E — zinaonekana kwa WOTE (kama q3 imechaguliwa) ──
+      const showDE = !!q3val && (!needsQ3b || !!q3bval);
+      toggleSection('sec-D', showDE);
+      toggle('q13-card', showDE);
+      toggle('q14-card', showDE);
+      toggle('q15-card', showDE);
+      toggleSection('sec-E', showDE);
+      toggle('q16-card', showDE);
+      toggle('q17-card', showDE);
+      toggle('q18-card', showDE);
+      toggle('q19-card', showDE);
+      toggle('q20-card', showDE);
+      toggle('q21-card', showDE);
+      document.getElementById('submit-section').classList.toggle('hidden', !showDE);
+
+      // Initial Section Reveal Logic
+      revealSections();
+
+      // Save draft whenever logic changes
+      saveDraft();
+
+      // Futa majibu ya maswali yaliyofichwa ili data iwe safi
+      if (!isPanga) clearCard('q4-card');
+      if (!showSecB) {
+        ['q5-card', 'q6-card', 'q7-card', 'q8-card', 'q9-card'].forEach(clearCard);
+      }
+      if (!showSecC) {
+        ['q10-card', 'q10b-card', 'q11-card', 'q12-card'].forEach(clearCard);
+      }
+      if (!(showSecB && q5hasdalali)) clearCard('q7-card');
+      if (!(showSecB && q5hasdalali && q7val && q7val.startsWith('Ndiyo'))) clearCard('q8-card');
+      if (!(showSecC && q10val === 'Ndiyo, niliathirika')) clearCard('q10b-card');
+
+      updateProgress();
+    }
+
+    // ── Helpers ──
+    function getRadioVal(name) {
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : null;
+    }
+    function isCheckboxChecked(name, value) {
+      return !!document.querySelector(`input[name="${name}"][value="${value}"]:checked`);
+    }
+    function toggle(id, show) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (show) {
+        el.classList.remove('hidden');
+        el.classList.add('slide-in');
       } else {
-        this.closest('.option').classList.toggle('selected', this.checked);
+        el.classList.add('hidden');
+        el.classList.remove('slide-in');
       }
-    });
-  });
-
-  // ══════════════════════════════════════════════════
-  // CONDITIONAL LOGIC — moyo wa fomu
-  //
-  // HALI NNE za q3:
-  //
-  // 1. "Ninapanga"
-  //    → Q4 (pango) ✓
-  //    → Sehemu B kamili (Q5, Q6, Q7, Q8, Q9) ✓
-  //    → Sehemu C kamili (Q10-Q12) ✓
-  //    → Sehemu D & E ✓
-  //
-  // 2. "Ninatafuta"
-  //    → Q4 ✗, Q5 ✗, Q6 ✗, Q9 ✗
-  //    → Sehemu B inaonekana lakini Q5,Q6,Q9 zimefichwa
-  //    → Sehemu C YOTE ✗ (Q10,Q10b,Q11,Q12 zimefichwa)
-  //    → Sehemu D & E ✓
-  //
-  // 3. "Ninaishi na familia" / "Nina nyumba yangu"
-  //    → Q3b inaonekana: "Je umewahi panga?"
-  //    →→ Jibu "Ndiyo": Sehemu B (Q5,Q6,Q7,Q8,Q9) ✓ + Sehemu C ✓ + D + E
-  //    →→ Jibu "Hapana": Sehemu B ✗, Sehemu C ✗ → ruka moja kwa moja D & E
-  // ══════════════════════════════════════════════════
-
-  function applyConditional() {
-    const q3val = getRadioVal('q3');
-    const q3bval = getRadioVal('q3b');
-    const q7val  = getRadioVal('q7');
-    const q10val = getRadioVal('q10');
-    const q5hasdalali = isCheckboxChecked('q5', 'Dalali');
-
-    // ── Determine path ──
-    const isTafuta    = q3val === 'Ninatafuta';
-    const isPanga     = q3val === 'Ninapanga';
-    const isFamilia   = q3val === 'Ninaishi na familia';
-    const isNyumbaYao = q3val === 'Nina nyumba yangu';
-    const needsQ3b    = isFamilia || isNyumbaYao;
-
-    // Waliowahi kupanga (familia/nyumba yao + wamejibu "Ndiyo" kwenye Q3b)
-    const waliwahiPanga = needsQ3b && q3bval === 'Ndiyo';
-    // Hawakuwahi kupanga kamwe
-    const hawakuPanga   = needsQ3b && q3bval === 'Hapana';
-
-    // Maswali ya Sehemu B (Q5,Q6,Q9) yanaonekana kama:
-    // - Ninapanga, AU
-    // - Familia/NyumbaYao na waliwahiPanga
-    const showSecB = isPanga || waliwahiPanga;
-
-    // Sehemu C inaonekana kama showSecB (yaani wamewahi panga au wanapanga)
-    const showSecC = showSecB;
-
-    // ── Q3b ──
-    toggle('q3b-card', needsQ3b);
-
-    // ── Q4 — pango la sasa (tu kwa Ninapanga) ──
-    toggle('q4-card', isPanga);
-
-    // ── Sehemu B header ──
-    toggleSection('sec-B', showSecB || isTafuta); // header inaonekana kama kuna angalau swali moja
-
-    // ── Q5, Q6, Q9 — HAZIONEKANI kama Ninatafuta ──
-    toggle('q5-card', showSecB);
-    toggle('q6-card', showSecB);
-    toggle('q9-card', showSecB);
-
-    // ── Q7 — inaonekana tu kama q5 imechaguliwa "Dalali" na showSecB ──
-    toggle('q7-card', showSecB && q5hasdalali);
-
-    // ── Q8 — inaonekana tu kama q7 = Ndiyo ──
-    toggle('q8-card', showSecB && q5hasdalali && q7val && q7val.startsWith('Ndiyo'));
-
-    // ── Sehemu C — header na maswali ──
-    toggleSection('sec-C', showSecC);
-    toggle('q10-card',  showSecC);
-    toggle('q10b-card', showSecC && q10val === 'Ndiyo, niliathirika');
-    toggle('q11-card',  showSecC);
-    toggle('q12-card',  showSecC);
-
-    // ── Sehemu D & E — zinaonekana kwa WOTE (kama q3 imechaguliwa) ──
-    const showDE = !!q3val && (!needsQ3b || !!q3bval);
-    toggleSection('sec-D', showDE);
-    toggle('q13-card', showDE);
-    toggle('q14-card', showDE);
-    toggle('q15-card', showDE);
-    toggleSection('sec-E', showDE);
-    toggle('q16-card', showDE);
-    toggle('q17-card', showDE);
-    toggle('q18-card', showDE);
-    toggle('q19-card', showDE);
-    toggle('q20-card', showDE);
-    document.getElementById('submit-section').classList.toggle('hidden', !showDE);
-
-    // Futa majibu ya maswali yaliyofichwa ili data iwe safi
-    if (!isPanga) clearCard('q4-card');
-    if (!showSecB) {
-      ['q5-card','q6-card','q7-card','q8-card','q9-card'].forEach(clearCard);
     }
-    if (!showSecC) {
-      ['q10-card','q10b-card','q11-card','q12-card'].forEach(clearCard);
+    function toggleSection(id, show) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.toggle('hidden', !show);
     }
-    if (!(showSecB && q5hasdalali)) clearCard('q7-card');
-    if (!(showSecB && q5hasdalali && q7val && q7val.startsWith('Ndiyo'))) clearCard('q8-card');
-    if (!(showSecC && q10val === 'Ndiyo, niliathirika')) clearCard('q10b-card');
-
-    updateProgress();
-  }
-
-  // ── Helpers ──
-  function getRadioVal(name) {
-    const el = document.querySelector(`input[name="${name}"]:checked`);
-    return el ? el.value : null;
-  }
-  function isCheckboxChecked(name, value) {
-    return !!document.querySelector(`input[name="${name}"][value="${value}"]:checked`);
-  }
-  function toggle(id, show) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (show) {
-      el.classList.remove('hidden');
-      el.classList.add('slide-in');
-    } else {
-      el.classList.add('hidden');
-      el.classList.remove('slide-in');
+    function clearCard(id) {
+      const el = document.getElementById(id);
+      if (!el || el.classList.contains('hidden')) return;
+      if (!el.classList.contains('hidden')) return;
+      el.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i => { i.checked = false; });
+      el.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
     }
-  }
-  function toggleSection(id, show) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.toggle('hidden', !show);
-  }
-  function clearCard(id) {
-    const el = document.getElementById(id);
-    if (!el || el.classList.contains('hidden')) return;
-    // Only clear if it's now hidden — prevents clearing visible answers
-    if (!el.classList.contains('hidden')) return;
-    el.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(i => { i.checked = false; });
-    el.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-  }
 
-  // ── Progress ──
-  function updateProgress() {
-    let answered = 0, total = 0;
-    document.querySelectorAll('[data-q]').forEach(card => {
-      if (card.classList.contains('hidden')) return;
-      total++;
-      const hasRadio  = card.querySelector('input[type=radio]:checked');
-      const hasCheck  = card.querySelector('input[type=checkbox]:checked');
-      const hasSelect = card.querySelector('select') && card.querySelector('select').value;
-      const hasText   = card.querySelector('textarea') && card.querySelector('textarea').value.trim().length > 2;
-      const hasScale  = card.querySelector('.scale-btn.sel');
-      if (hasRadio || hasCheck || hasSelect || hasText || hasScale) answered++;
-    });
-    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
-    document.getElementById('prog-fill').style.width = pct + '%';
-    document.getElementById('prog-label').textContent = answered + ' / ' + total + ' maswali';
-  }
+    // ── Progress ──
+    function updateProgress() {
+      let answered = 0, total = 0;
+      document.querySelectorAll('[data-q]').forEach(card => {
+        if (card.classList.contains('hidden')) return;
+        total++;
+        const hasRadio = card.querySelector('input[type=radio]:checked');
+        const hasCheck = card.querySelector('input[type=checkbox]:checked');
+        const hasSelect = card.querySelector('select') && card.querySelector('select').value;
+        const hasText = card.querySelector('textarea') && card.querySelector('textarea').value.trim().length > 2;
+        const hasScale = card.querySelector('.scale-btn.sel');
+        if (hasRadio || hasCheck || hasSelect || hasText || hasScale) answered++;
+      });
+      const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+      document.getElementById('prog-fill').style.width = pct + '%';
+      document.getElementById('prog-label').textContent = answered + ' / ' + total + ' maswali';
+    }
 
-  // ── Collect answers ──
-  function collectAnswers() {
-    const data = { timestamp: new Date().toISOString(), userAgent: navigator.userAgent };
-    document.querySelectorAll('[data-q]').forEach(card => {
-      const qid = 'q' + card.dataset.q;
-      if (card.classList.contains('hidden')) { data[qid] = null; return; }
-      const radios = card.querySelectorAll('input[type=radio]:checked');
-      const checks = card.querySelectorAll('input[type=checkbox]:checked');
-      const sel    = card.querySelector('select');
-      const txt    = card.querySelector('textarea');
-      const scale  = card.querySelector('.scale-btn.sel');
-      if (radios.length)        data[qid] = radios[0].value;
-      else if (checks.length)   data[qid] = Array.from(checks).map(c => c.value);
-      else if (sel && sel.value) data[qid] = sel.value;
-      else if (txt && txt.value.trim()) data[qid] = txt.value.trim();
-      else if (scale)           data[qid] = parseInt(scale.dataset.val);
-      else                      data[qid] = null;
-    });
-    return data;
-  }
-
-  // ── Validate ──
-  function validate() {
-    let valid = true;
-    document.querySelectorAll('[data-required="true"]').forEach(card => {
-      if (card.classList.contains('hidden')) return;
-      card.classList.remove('invalid');
-      const hasRadio  = card.querySelector('input[type=radio]:checked');
-      const hasCheck  = card.querySelector('input[type=checkbox]:checked');
-      const hasSelect = card.querySelector('select') && card.querySelector('select').value;
-      const hasScale  = card.querySelector('.scale-btn.sel');
-      if (!hasRadio && !hasCheck && !hasSelect && !hasScale) {
-        card.classList.add('invalid');
-        valid = false;
+    // ── Collect answers ──
+    function collectAnswers() {
+      const data = { timestamp: new Date().toISOString(), userAgent: navigator.userAgent };
+      document.querySelectorAll('[data-q]').forEach(card => {
+        const qid = 'q' + card.dataset.q;
+        if (card.classList.contains('hidden')) { data[qid] = null; return; }
+        const radios = card.querySelectorAll('input[type=radio]:checked');
+        const checks = card.querySelectorAll('input[type=checkbox]:checked');
+        const sel = card.querySelector('select');
+        const txt = card.querySelector('textarea');
+        const scale = card.querySelector('.scale-btn.sel');
+        if (radios.length) data[qid] = radios[0].value;
+        else if (checks.length) data[qid] = Array.from(checks).map(c => c.value);
+        else if (sel && sel.value) data[qid] = sel.value;
+        else if (txt && txt.value.trim()) data[qid] = txt.value.trim();
+        else if (scale) data[qid] = parseInt(scale.dataset.val);
+        else data[qid] = null;
+      });
+      const q17OtherEl = document.getElementById('q17-other-text');
+      if (q17OtherEl && q17OtherEl.value.trim()) {
+        data['q17_other'] = q17OtherEl.value.trim();
       }
-    });
-    return valid;
-  }
+      const q21Waitlist = document.getElementById('q21_waitlist');
+      if (q21Waitlist && q21Waitlist.checked) {
+        data['q21_waitlist'] = true;
+        data['q21_whatsapp'] = document.getElementById('q21_whatsapp').value;
+      }
+      return data;
+    }
 
-  // ── Submit ──
-  async function submitForm() {
-    if (!validate()) {
-      const first = document.querySelector('.q-card.invalid');
-      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // ── Validate ──
+    function validate() {
+      let valid = true;
+      document.querySelectorAll('[data-required="true"]').forEach(card => {
+        if (card.classList.contains('hidden')) return;
+        card.classList.remove('invalid');
+        const hasRadio = card.querySelector('input[type=radio]:checked');
+        const hasCheck = card.querySelector('input[type=checkbox]:checked');
+        const hasSelect = card.querySelector('select') && card.querySelector('select').value;
+        const hasScale = card.querySelector('.scale-btn.sel');
+        if (!hasRadio && !hasCheck && !hasSelect && !hasScale) {
+          card.classList.add('invalid');
+          valid = false;
+        }
+      });
+      return valid;
+    }
+
+    // ── Submit ──
+    async function submitForm() {
+      if (!validate()) {
+        const first = document.querySelector('.q-card.invalid');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const b2 = document.getElementById('error-banner2');
+        b2.style.display = 'block';
+        b2.textContent = '⚠️ Tafadhali jibu maswali yote ya lazima (*) kabla ya kutuma.';
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
       const b2 = document.getElementById('error-banner2');
-      b2.style.display = 'block';
-      b2.textContent = '⚠️ Tafadhali jibu maswali yote ya lazima (*) kabla ya kutuma.';
-      return;
-    }
+      b2.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Inatuma... ⏳';
 
-    const btn = document.getElementById('submit-btn');
-    const b2  = document.getElementById('error-banner2');
-    b2.style.display = 'none';
-    btn.disabled = true;
-    btn.textContent = 'Inatuma... ⏳';
+      const answers = collectAnswers();
 
-    const answers = collectAnswers();
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('timeout')), 10000)
+      );
 
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timeout')), 10000)
-    );
+      try {
+        const { collection, addDoc, doc, updateDoc, increment, serverTimestamp } = window._fbModules;
+        const db = window._db;
 
-    try {
-      const { collection, addDoc, doc, updateDoc, increment, serverTimestamp } = window._fbModules;
-      const db = window._db;
+        const savePromise = (async () => {
+          await addDoc(collection(db, "responses"), answers);
+          const statsRef = doc(db, "stats", "overview");
+          await updateDoc(statsRef, { submissions: increment(1), lastUpdated: serverTimestamp() });
+        })();
 
-      const savePromise = (async () => {
-        await addDoc(collection(db, "responses"), answers);
-        const statsRef = doc(db, "stats", "overview");
-        await updateDoc(statsRef, { submissions: increment(1), lastUpdated: serverTimestamp() });
-      })();
+        await Promise.race([savePromise, timeoutPromise]);
 
-      await Promise.race([savePromise, timeoutPromise]);
-
-      // Mark as submitted — mtu hawezi kujaza tena
-      localStorage.setItem('utafiti_submitted', 'true');
-
-      document.getElementById('form-main').style.display = 'none';
-      document.getElementById('thankyou').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    } catch (e) {
-      console.error("Firebase error:", e);
-      localStorage.setItem('survey_response_' + Date.now(), JSON.stringify(answers));
-
-      if (e.message === 'timeout' || e.code === 'permission-denied') {
-        // Hifadhi na onyesha thank you
         localStorage.setItem('utafiti_submitted', 'true');
+        localStorage.removeItem('utafiti_draft');
+
         document.getElementById('form-main').style.display = 'none';
         document.getElementById('thankyou').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        btn.disabled = false;
-        btn.textContent = 'Tuma Majibu Yangu ✓';
-        b2.style.display = 'block';
-        b2.textContent = '⚠️ Tatizo la mtandao. Tafadhali angalia intaneti yako na ujaribu tena.';
+
+      } catch (e) {
+        console.error("Firebase error:", e);
+        localStorage.setItem('survey_response_' + Date.now(), JSON.stringify(answers));
+
+        if (e.message === 'timeout' || e.code === 'permission-denied') {
+          localStorage.setItem('utafiti_submitted', 'true');
+          document.getElementById('form-main').style.display = 'none';
+          document.getElementById('thankyou').style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          btn.disabled = false;
+          btn.textContent = 'Tuma Majibu Yangu ✓';
+          b2.style.display = 'block';
+          b2.textContent = '⚠️ Tatizo la mtandao. Tafadhali angalia intaneti yako na ujaribu tena.';
+        }
       }
     }
-  }
 
-  function shareWA() {
-    const msg = encodeURIComponent('Nimejaza fomu hii ya utafiti wa nyumba Tanzania — ni dakika 5 tu. Tafadhali ujaze pia! 🏠 ' + window.location.href);
-    window.open('https://wa.me/?text=' + msg, '_blank');
-  }
-  function shareFB() {
-    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank');
-  }
-</script>
+    function shareWA() {
+      const msg = encodeURIComponent('Nimejaza fomu hii ya utafiti wa nyumba Tanzania 🇹🇿. Ni dakika 5 tu na inasaidia sana kuboresha hali ya makazi. Karibu ujaze pia hapa: ' + window.location.href);
+      window.open('https://wa.me/?text=' + msg, '_blank');
+    }
+
+    // ── Waitlist Toggle ──
+    function toggleWaitlist() {
+      const chk = document.getElementById('q21_waitlist');
+      const wrap = document.getElementById('waitlist-wrap');
+      if (!chk || !wrap) return;
+      wrap.style.display = chk.checked ? 'block' : 'none';
+    }
+
+    // ── Auto-save Draft ──
+    function saveDraft() {
+      if (localStorage.getItem('utafiti_submitted') === 'true') return;
+      const data = collectAnswers();
+      localStorage.setItem('utafiti_draft', JSON.stringify(data));
+    }
+
+    function loadDraft() {
+      const draft = localStorage.getItem('utafiti_draft');
+      if (!draft) return;
+      try {
+        const data = JSON.parse(draft);
+        Object.keys(data).forEach(key => {
+          if (!data[key]) return;
+          
+          // Handle select
+          const sel = document.getElementById(key);
+          if (sel && sel.tagName === 'SELECT') {
+            sel.value = data[key];
+          }
+          
+          // Handle textarea
+          const txt = document.getElementById(key);
+          if (txt && txt.tagName === 'TEXTAREA') {
+            txt.value = data[key];
+          }
+
+          // Handle Radios & Checkboxes
+          const inputs = document.getElementsByName(key);
+          inputs.forEach(input => {
+            if (input.type === 'radio') {
+              if (input.value === data[key]) input.checked = true;
+            } else if (input.type === 'checkbox') {
+              if (Array.isArray(data[key]) && data[key].includes(input.value)) {
+                input.checked = true;
+              } else if (input.value === data[key]) {
+                input.checked = true;
+              }
+            }
+            const opt = input.closest('.option');
+            if (opt) opt.classList.toggle('selected', input.checked);
+          });
+
+          // Handle Special bits
+          if (key === 'q17_other' && data[key]) {
+             const otxt = document.getElementById('q17-other-text');
+             if (otxt) otxt.value = data[key];
+             const ochk = document.getElementById('q17-other-chk');
+             if (ochk) { ochk.checked = true; toggleQ17Other(); }
+          }
+          if (key === 'q21_waitlist' && data[key]) {
+             const wchk = document.getElementById('q21_waitlist');
+             if (wchk) { wchk.checked = true; toggleWaitlist(); }
+          }
+          if (key === 'q21_whatsapp' && data[key]) {
+             const wtel = document.getElementById('q21_whatsapp');
+             if (wtel) wtel.value = data[key];
+          }
+          
+          // Handle scale buttons
+          if (key === 'q19') {
+            const btns = document.querySelectorAll('#scale-19 .scale-btn');
+            btns.forEach(b => {
+               if (parseInt(b.dataset.val) === data[key]) b.classList.add('sel');
+            });
+          }
+        });
+        applyConditional();
+        updateProgress();
+      } catch(e) { console.error("Draft error:", e); }
+    }
+
+    // ── Section Reveal ──
+    function revealSections() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.section-head').forEach(section => {
+        observer.observe(section);
+      });
+    }
+
+    // Initialize on load
+    window.addEventListener('scroll', revealSections);
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDraft();
+      revealSections();
+    });
+
+    function shareFB() {
+      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank');
+    }
+  </script>
 </body>
+
 </html>
