@@ -497,7 +497,16 @@
       margin: 4px
     }
 
-    .error-banner{background:#FFEBEE;border:1px solid #FFCDD2;color:var(--red);padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none}
+    .error-banner {
+      background: #FFEBEE;
+      border: 1px solid #FFCDD2;
+      color: var(--red);
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none
+    }
 
     /* Section Animations */
     .section-head {
@@ -505,21 +514,25 @@
       transform: translateY(20px);
       transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     }
+
     .section-head.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    
+
     .q-card {
       transition: all 0.4s ease;
     }
-    
+
     /* Waitlist Styles */
     .waitlist-card {
       background: var(--brown-l);
       border-left: 4px solid var(--brown-m);
     }
-    .waitlist-card .q-text { color: var(--brown-d); }
+
+    .waitlist-card .q-text {
+      color: var(--brown-d);
+    }
 
     /* Already submitted screen */
     .already-done {
@@ -695,15 +708,20 @@
       <div class="q-text">Pango unalolipa kila mwezi ni kiasi gani (TZS)?</div>
       <div class="q-hint">Swali hili linakuhusu kwa sababu unasema unapanga</div>
       <div class="radio-group">
-        <label class="option"><input type="radio" name="q4" value="<50k" onchange="updateProgress();saveDraft()"> Chini ya TZS
+        <label class="option"><input type="radio" name="q4" value="<50k" onchange="updateProgress();saveDraft()"> Chini
+          ya TZS
           50,000</label>
-        <label class="option"><input type="radio" name="q4" value="50k-150k" onchange="updateProgress();saveDraft()"> TZS 50,000 –
+        <label class="option"><input type="radio" name="q4" value="50k-150k" onchange="updateProgress();saveDraft()">
+          TZS 50,000 –
           150,000</label>
-        <label class="option"><input type="radio" name="q4" value="150k-400k" onchange="updateProgress();saveDraft()"> TZS 160,000 –
+        <label class="option"><input type="radio" name="q4" value="150k-400k" onchange="updateProgress();saveDraft()">
+          TZS 160,000 –
           400,000</label>
-        <label class="option"><input type="radio" name="q4" value="400k-700k" onchange="updateProgress();saveDraft()"> TZS 410,000 –
+        <label class="option"><input type="radio" name="q4" value="400k-700k" onchange="updateProgress();saveDraft()">
+          TZS 410,000 –
           700,000</label>
-        <label class="option"><input type="radio" name="q4" value=">700k" onchange="updateProgress();saveDraft()"> Zaidi ya TZS
+        <label class="option"><input type="radio" name="q4" value=">700k" onchange="updateProgress();saveDraft()"> Zaidi
+          ya TZS
           710,000</label>
       </div>
     </div>
@@ -733,7 +751,8 @@
         <label class="option"><input type="checkbox" name="q5" value="Kutembea"
             onchange="updateProgress();applyConditional();saveDraft()"> Kutembea mitaani kuangalia vibao</label>
         <label class="option"><input type="checkbox" name="q5" value="Tovuti/App"
-            onchange="updateProgress();applyConditional();saveDraft()"> Tovuti au app (Lamudi, Zoom Tanzania, n.k.)</label>
+            onchange="updateProgress();applyConditional();saveDraft()"> Tovuti au app (Lamudi, Zoom Tanzania,
+          n.k.)</label>
         <label class="option"><input type="checkbox" name="q5" value="Nyingine"
             onchange="updateProgress();applyConditional();saveDraft()"> Njia nyingine</label>
       </div>
@@ -745,15 +764,20 @@
       <div class="q-text">Ulitumia muda gani kutafuta nyumba ya mwisho uliyoipata?<span class="q-required">*</span>
       </div>
       <div class="radio-group">
-        <label class="option"><input type="radio" name="q6" value="<1 wiki" onchange="updateProgress();saveDraft()"> Chini ya wiki
+        <label class="option"><input type="radio" name="q6" value="<1 wiki" onchange="updateProgress();saveDraft()">
+          Chini ya wiki
           moja</label>
-        <label class="option"><input type="radio" name="q6" value="1-2 wiki" onchange="updateProgress();saveDraft()"> Wiki 1 –
+        <label class="option"><input type="radio" name="q6" value="1-2 wiki" onchange="updateProgress();saveDraft()">
+          Wiki 1 –
           2</label>
-        <label class="option"><input type="radio" name="q6" value="3-4 wiki" onchange="updateProgress();saveDraft()"> Wiki 3 –
+        <label class="option"><input type="radio" name="q6" value="3-4 wiki" onchange="updateProgress();saveDraft()">
+          Wiki 3 –
           4</label>
-        <label class="option"><input type="radio" name="q6" value="1-3 miezi" onchange="updateProgress();saveDraft()"> Miezi 1 –
+        <label class="option"><input type="radio" name="q6" value="1-3 miezi" onchange="updateProgress();saveDraft()">
+          Miezi 1 –
           3</label>
-        <label class="option"><input type="radio" name="q6" value=">3 miezi" onchange="updateProgress();saveDraft()"> Zaidi ya miezi
+        <label class="option"><input type="radio" name="q6" value=">3 miezi" onchange="updateProgress();saveDraft()">
+          Zaidi ya miezi
           3</label>
       </div>
     </div>
@@ -766,7 +790,8 @@
         <label class="option"><input type="radio" name="q7" value="Ndiyo, nilazimika"
             onchange="updateProgress();applyConditional();saveDraft()"> Ndiyo, nililazimika kutumia dalali</label>
         <label class="option"><input type="radio" name="q7" value="Ndiyo, nilichagua"
-            onchange="updateProgress();applyConditional();saveDraft()"> Ndiyo, nilichagua mwenyewe kutumia dalali</label>
+            onchange="updateProgress();applyConditional();saveDraft()"> Ndiyo, nilichagua mwenyewe kutumia
+          dalali</label>
         <label class="option"><input type="radio" name="q7" value="Hapana"
             onchange="updateProgress();applyConditional();saveDraft()"> Hapana, nilipata nyumba bila dalali</label>
       </div>
@@ -778,15 +803,20 @@
       <div class="q-text">Dalali alikulipisha kiasi gani?</div>
       <div class="q-hint">Swali hili linakuhusu kwa sababu ulisema ulitumia dalali</div>
       <div class="radio-group">
-        <label class="option"><input type="radio" name="q8" value="<50k" onchange="updateProgress();saveDraft()"> Chini ya TZS
+        <label class="option"><input type="radio" name="q8" value="<50k" onchange="updateProgress();saveDraft()"> Chini
+          ya TZS
           50,000</label>
-        <label class="option"><input type="radio" name="q8" value="50k-100k" onchange="updateProgress();saveDraft()"> TZS 50,000 –
+        <label class="option"><input type="radio" name="q8" value="50k-100k" onchange="updateProgress();saveDraft()">
+          TZS 50,000 –
           100,000</label>
-        <label class="option"><input type="radio" name="q8" value="Nusu pango" onchange="updateProgress();saveDraft()"> Nusu ya
+        <label class="option"><input type="radio" name="q8" value="Nusu pango" onchange="updateProgress();saveDraft()">
+          Nusu ya
           pango moja (kama 100k – 200k)</label>
-        <label class="option"><input type="radio" name="q8" value="Pango kamili" onchange="updateProgress();saveDraft()"> Pango
+        <label class="option"><input type="radio" name="q8" value="Pango kamili"
+            onchange="updateProgress();saveDraft()"> Pango
           kamili moja (kama 200k – 400k+)</label>
-        <label class="option"><input type="radio" name="q8" value="Zaidi ya pango moja" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="radio" name="q8" value="Zaidi ya pango moja"
+            onchange="updateProgress();saveDraft()">
           Zaidi ya pango moja</label>
       </div>
     </div>
@@ -797,21 +827,31 @@
       <div class="q-text">Ulikutana na matatizo gani wakati wa kutafuta nyumba?<span class="q-required">*</span></div>
       <div class="q-hint">Chagua yote yanayokufaa</div>
       <div class="check-group">
-        <label class="option"><input type="checkbox" name="q9" value="Ada dalali ghali" onchange="updateProgress();saveDraft()"> Ada
+        <label class="option"><input type="checkbox" name="q9" value="Ada dalali ghali"
+            onchange="updateProgress();saveDraft()"> Ada
           za dalali ni ghali sana</label>
-        <label class="option"><input type="checkbox" name="q9" value="Picha si kweli" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q9" value="Picha si kweli"
+            onchange="updateProgress();saveDraft()">
           Nyumba haikuwa kama ilivyoonyeshwa kwenye picha</label>
-        <label class="option"><input type="checkbox" name="q9" value="Mwenye nyumba mgumu" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q9" value="Mwenye nyumba mgumu"
+            onchange="updateProgress();saveDraft()">
           Mwenye nyumba alikuwa mgumu kuwasiliana naye</label>
-        <label class="option"><input type="checkbox" name="q9" value="Deposit ilipotea" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q9" value="Deposit ilipotea"
+            onchange="updateProgress();saveDraft()">
           Deposit ilipotea au haikurudishwa</label>
-        <label class="option"><input type="checkbox" name="q9" value="Bei ilibadilika" onchange="updateProgress();saveDraft()"> Bei
+        <label class="option"><input type="checkbox" name="q9" value="Bei ilibadilika"
+            onchange="updateProgress();saveDraft()"> Bei
           ya pango ilibadilika baada ya kukubaliana</label>
         <label class="option"><input type="checkbox" name="q9" value="Nyumba hazikupatikana"
             onchange="updateProgress();saveDraft()"> Nyumba nyingi zilionyeshwa lakini hazikupatikana tena</label>
-        <label class="option"><input type="checkbox" name="q9" value="Hakuna mkataba" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q9" value="Hakuna mkataba"
+            onchange="updateProgress();saveDraft()">
           Sikupata mkataba wowote wa maandishi</label>
-        <label class="option"><input type="checkbox" name="q9" value="Hakuna tatizo" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q9" value="Kuzunguka mitaani"
+            onchange="updateProgress();saveDraft()">
+          Kuzunguka mtaa kwa mtaa, nyumba kwa nyumba naulizia</label>
+        <label class="option"><input type="checkbox" name="q9" value="Hakuna tatizo"
+            onchange="updateProgress();saveDraft()">
           Hakukuwa na tatizo lolote</label>
       </div>
     </div>
@@ -846,15 +886,20 @@
       <div class="q-text">Ulipoteza kiasi gani kwenye scam hiyo?</div>
       <div class="q-hint">Asante kwa uwazi wako — hii itasaidia sana utafiti huu</div>
       <div class="radio-group">
-        <label class="option"><input type="radio" name="q10b" value="<50k" onchange="updateProgress();saveDraft()"> Chini ya TZS
+        <label class="option"><input type="radio" name="q10b" value="<50k" onchange="updateProgress();saveDraft()">
+          Chini ya TZS
           50,000</label>
-        <label class="option"><input type="radio" name="q10b" value="50k-200k" onchange="updateProgress();saveDraft()"> TZS 50,000 –
+        <label class="option"><input type="radio" name="q10b" value="50k-200k" onchange="updateProgress();saveDraft()">
+          TZS 50,000 –
           200,000</label>
-        <label class="option"><input type="radio" name="q10b" value="200k-500k" onchange="updateProgress();saveDraft()"> TZS 200,000
+        <label class="option"><input type="radio" name="q10b" value="200k-500k" onchange="updateProgress();saveDraft()">
+          TZS 200,000
           – 500,000</label>
-        <label class="option"><input type="radio" name="q10b" value=">500k" onchange="updateProgress();saveDraft()"> Zaidi ya TZS
+        <label class="option"><input type="radio" name="q10b" value=">500k" onchange="updateProgress();saveDraft()">
+          Zaidi ya TZS
           500,000</label>
-        <label class="option"><input type="radio" name="q10b" value="Sijakumbuka" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="radio" name="q10b" value="Sijakumbuka"
+            onchange="updateProgress();saveDraft()">
           Sijakumbuka / sitaki kusema</label>
       </div>
     </div>
@@ -865,19 +910,26 @@
           class="q-required">*</span></div>
       <div class="q-hint">Chagua zote zinazokusaidia zaidi katika kumuamini mwenye nyumba.</div>
       <div class="check-group">
-        <label class="option"><input type="checkbox" name="q11" value="NIDA" onchange="updateProgress();saveDraft()"> Kuona
+        <label class="option"><input type="checkbox" name="q11" value="NIDA" onchange="updateProgress();saveDraft()">
+          Kuona
           kitambulisho chake cha NIDA</label>
-        <label class="option"><input type="checkbox" name="q11" value="Reviews" onchange="updateProgress();saveDraft()"> Maoni
+        <label class="option"><input type="checkbox" name="q11" value="Reviews" onchange="updateProgress();saveDraft()">
+          Maoni
           (reviews) kutoka kwa wapangaji wengine</label>
-        <label class="option"><input type="checkbox" name="q11" value="Mkataba" onchange="updateProgress();saveDraft()"> Mkataba wa
+        <label class="option"><input type="checkbox" name="q11" value="Mkataba" onchange="updateProgress();saveDraft()">
+          Mkataba wa
           maandishi (hata kwa simu)</label>
-        <label class="option"><input type="checkbox" name="q11" value="Rafiki/familia" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q11" value="Rafiki/familia"
+            onchange="updateProgress();saveDraft()">
           Niliambiwa na rafiki au familia</label>
-        <label class="option"><input type="checkbox" name="q11" value="Kuona nyumba" onchange="updateProgress();saveDraft()"> Kuona
+        <label class="option"><input type="checkbox" name="q11" value="Kuona nyumba"
+            onchange="updateProgress();saveDraft()"> Kuona
           nyumba mwenyewe kabla ya kulipa</label>
-        <label class="option"><input type="checkbox" name="q11" value="Anaishi karibu" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q11" value="Anaishi karibu"
+            onchange="updateProgress();saveDraft()">
           Mwenye nyumba anaishi karibu na nyumba hiyo</label>
-        <label class="option"><input type="checkbox" name="q11" value="Verified badge" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q11" value="Verified badge"
+            onchange="updateProgress();saveDraft()">
           Alama ya uthibitisho (verified) kwenye app au tovuti</label>
       </div>
     </div>
@@ -888,11 +940,14 @@
           class="q-required">*</span></div>
       <div class="q-hint">Deposit ingehifadhiwa salama na kutolewa tu ukisema umeingia (escrow)</div>
       <div class="radio-group">
-        <label class="option"><input type="radio" name="q12" value="Ndiyo sana" onchange="updateProgress();saveDraft()"> Ndiyo, hii
+        <label class="option"><input type="radio" name="q12" value="Ndiyo sana" onchange="updateProgress();saveDraft()">
+          Ndiyo, hii
           ingenifariji sana</label>
-        <label class="option"><input type="radio" name="q12" value="Labda" onchange="updateProgress();saveDraft()"> Labda,
+        <label class="option"><input type="radio" name="q12" value="Labda" onchange="updateProgress();saveDraft()">
+          Labda,
           ningependa kujua zaidi kwanza</label>
-        <label class="option"><input type="radio" name="q12" value="Hapana" onchange="updateProgress();saveDraft()"> Hapana,
+        <label class="option"><input type="radio" name="q12" value="Hapana" onchange="updateProgress();saveDraft()">
+          Hapana,
           ninapendelea kulipa moja kwa moja</label>
       </div>
     </div>
@@ -910,11 +965,14 @@
       <div class="q-num">Swali 13</div>
       <div class="q-text">Unatumia simu ya aina gani zaidi?<span class="q-required">*</span></div>
       <div class="radio-group">
-        <label class="option"><input type="radio" name="q13" value="Android" onchange="updateProgress();saveDraft()"> Android
+        <label class="option"><input type="radio" name="q13" value="Android" onchange="updateProgress();saveDraft()">
+          Android
           (Samsung, Tecno, Itel, n.k.)</label>
-        <label class="option"><input type="radio" name="q13" value="iPhone" onchange="updateProgress();saveDraft()"> iPhone
+        <label class="option"><input type="radio" name="q13" value="iPhone" onchange="updateProgress();saveDraft()">
+          iPhone
           (Apple)</label>
-        <label class="option"><input type="radio" name="q13" value="Feature phone" onchange="updateProgress();saveDraft()"> Simu ya
+        <label class="option"><input type="radio" name="q13" value="Feature phone"
+            onchange="updateProgress();saveDraft()"> Simu ya
           kawaida (feature phone)</label>
       </div>
     </div>
@@ -924,21 +982,27 @@
       <div class="q-text">App zipi unazotumia mara kwa mara?<span class="q-required">*</span></div>
       <div class="q-hint">Chagua zote</div>
       <div class="check-group">
-        <label class="option"><input type="checkbox" name="q14" value="WhatsApp" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q14" value="WhatsApp"
+            onchange="updateProgress();saveDraft()">
           WhatsApp</label>
-        <label class="option"><input type="checkbox" name="q14" value="Facebook" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q14" value="Facebook"
+            onchange="updateProgress();saveDraft()">
           Facebook</label>
         <label class="option"><input type="checkbox" name="q14" value="TikTok" onchange="updateProgress();saveDraft()">
           TikTok</label>
-        <label class="option"><input type="checkbox" name="q14" value="Instagram" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q14" value="Instagram"
+            onchange="updateProgress();saveDraft()">
           Instagram</label>
         <label class="option"><input type="checkbox" name="q14" value="YouTube" onchange="updateProgress();saveDraft()">
           YouTube</label>
-        <label class="option"><input type="checkbox" name="q14" value="M-Pesa/Airtel Money" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q14" value="M-Pesa/Airtel Money"
+            onchange="updateProgress();saveDraft()">
           M-Pesa / Airtel Money</label>
-        <label class="option"><input type="checkbox" name="q14" value="Jumia/Kilimall" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q14" value="Jumia/Kilimall"
+            onchange="updateProgress();saveDraft()">
           Jumia / Kilimall</label>
-        <label class="option"><input type="checkbox" name="q14" value="Bolt/Uber" onchange="updateProgress();saveDraft()"> Bolt /
+        <label class="option"><input type="checkbox" name="q14" value="Bolt/Uber"
+            onchange="updateProgress();saveDraft()"> Bolt /
           Uber</label>
       </div>
     </div>
@@ -947,13 +1011,17 @@
       <div class="q-num">Swali 15</div>
       <div class="q-text">Je, umewahi kutumia tovuti au app kutafuta nyumba?<span class="q-required">*</span></div>
       <div class="radio-group">
-        <label class="option"><input type="radio" name="q15" value="Ndiyo, ilifanya kazi" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="radio" name="q15" value="Ndiyo, ilifanya kazi"
+            onchange="updateProgress();saveDraft()">
           Ndiyo, na ilifanya kazi vizuri</label>
-        <label class="option"><input type="radio" name="q15" value="Ndiyo, haikufaa" onchange="updateProgress();saveDraft()"> Ndiyo,
+        <label class="option"><input type="radio" name="q15" value="Ndiyo, haikufaa"
+            onchange="updateProgress();saveDraft()"> Ndiyo,
           lakini haikufaa sana</label>
-        <label class="option"><input type="radio" name="q15" value="Hapana" onchange="updateProgress();saveDraft()"> Hapana,
+        <label class="option"><input type="radio" name="q15" value="Hapana" onchange="updateProgress();saveDraft()">
+          Hapana,
           sijawahi jaribu</label>
-        <label class="option"><input type="radio" name="q15" value="Sijui kama ipo" onchange="updateProgress();saveDraft()"> Sijui
+        <label class="option"><input type="radio" name="q15" value="Sijui kama ipo"
+            onchange="updateProgress();saveDraft()"> Sijui
           kama kuna app kama hiyo Tanzania</label>
       </div>
     </div>
@@ -972,13 +1040,17 @@
       <div class="q-text">Kama kungekua na App inayokuruhusu kutafuta nyumba moja kwa moja na mwenye nyumba — bila
         dalali. Ungeitumia?<span class="q-required">*</span></div>
       <div class="radio-group">
-        <label class="option"><input type="radio" name="q16" value="Ndiyo kabisa" onchange="updateProgress();saveDraft()"> Ndiyo
+        <label class="option"><input type="radio" name="q16" value="Ndiyo kabisa"
+            onchange="updateProgress();saveDraft()"> Ndiyo
           kabisa, ningependa sana</label>
-        <label class="option"><input type="radio" name="q16" value="Labda" onchange="updateProgress();saveDraft()"> Labda, nikijua
+        <label class="option"><input type="radio" name="q16" value="Labda" onchange="updateProgress();saveDraft()">
+          Labda, nikijua
           inafanya kazi kweli</label>
-        <label class="option"><input type="radio" name="q16" value="Sidhani" onchange="updateProgress();saveDraft()"> Sidhani —
+        <label class="option"><input type="radio" name="q16" value="Sidhani" onchange="updateProgress();saveDraft()">
+          Sidhani —
           ninapendelea njia za kawaida</label>
-        <label class="option"><input type="radio" name="q16" value="Hapana" onchange="updateProgress();saveDraft()"> Hapana, sioni
+        <label class="option"><input type="radio" name="q16" value="Hapana" onchange="updateProgress();saveDraft()">
+          Hapana, sioni
           sababu</label>
       </div>
     </div>
@@ -990,21 +1062,27 @@
       <div class="q-hint">Chagua zote zinazokupendeza zaidi. Kama chaguo lako halikupo kwenye orodha, tafadhali jaza
         kisanduku cha "Nyingine" hapa chini na uandike pendekezo lako mwenyewe.</div>
       <div class="check-group">
-        <label class="option"><input type="checkbox" name="q17" value="Picha za kweli" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q17" value="Picha za kweli"
+            onchange="updateProgress();saveDraft()">
           Picha za kweli za nyumba</label>
-        <label class="option"><input type="checkbox" name="q17" value="Bei wazi" onchange="updateProgress();saveDraft()"> Bei wazi
+        <label class="option"><input type="checkbox" name="q17" value="Bei wazi"
+            onchange="updateProgress();saveDraft()"> Bei wazi
           na ya ukweli</label>
         <label class="option"><input type="checkbox" name="q17" value="Mawasiliano ya moja kwa moja"
             onchange="updateProgress();saveDraft()"> Mawasiliano ya moja kwa moja na mwenye nyumba</label>
-        <label class="option"><input type="checkbox" name="q17" value="Verified landlord" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q17" value="Verified landlord"
+            onchange="updateProgress();saveDraft()">
           Uthibitisho wa mwenye nyumba (verified)</label>
         <label class="option"><input type="checkbox" name="q17" value="Reviews za wapangaji"
             onchange="updateProgress();saveDraft()"> Maoni ya wapangaji waliokaa hapo kabla</label>
-        <label class="option"><input type="checkbox" name="q17" value="Ramani" onchange="updateProgress();saveDraft()"> Ramani
+        <label class="option"><input type="checkbox" name="q17" value="Ramani" onchange="updateProgress();saveDraft()">
+          Ramani
           inayoonyesha mahali pa nyumba</label>
-        <label class="option"><input type="checkbox" name="q17" value="Digital contract" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="checkbox" name="q17" value="Digital contract"
+            onchange="updateProgress();saveDraft()">
           Mkataba wa kidijitali (digital contract)</label>
-        <label class="option"><input type="checkbox" name="q17" value="App ya haraka" onchange="updateProgress();saveDraft()"> App
+        <label class="option"><input type="checkbox" name="q17" value="App ya haraka"
+            onchange="updateProgress();saveDraft()"> App
           inayofanya kazi vizuri hata intaneti ikiwa polepole</label>
         <label class="option"><input type="checkbox" name="q17" value="Nyingine" id="q17-other-chk"
             onchange="toggleQ17Other();updateProgress();saveDraft()"> Nyingine (chaguo langu halipo hapo juu)</label>
@@ -1024,13 +1102,17 @@
         app?<span class="q-required">*</span></div>
       <div class="q-hint">Kutafuta na kuwasiliana ni bure. Unalipa tu ukipata nyumba kweli</div>
       <div class="radio-group">
-        <label class="option"><input type="radio" name="q18" value="Ndiyo, sawa" onchange="updateProgress();saveDraft()"> Ndiyo,
+        <label class="option"><input type="radio" name="q18" value="Ndiyo, sawa"
+            onchange="updateProgress();saveDraft()"> Ndiyo,
           hiyo ni sawa na ya haki</label>
-        <label class="option"><input type="radio" name="q18" value="Labda" onchange="updateProgress();saveDraft()"> Labda,
+        <label class="option"><input type="radio" name="q18" value="Labda" onchange="updateProgress();saveDraft()">
+          Labda,
           inategemea ubora wa huduma</label>
-        <label class="option"><input type="radio" name="q18" value="Hapana, bure" onchange="updateProgress();saveDraft()"> Hapana,
+        <label class="option"><input type="radio" name="q18" value="Hapana, bure"
+            onchange="updateProgress();saveDraft()"> Hapana,
           inapaswa kuwa bure kabisa</label>
-        <label class="option"><input type="radio" name="q18" value="Ada ndogo zaidi" onchange="updateProgress();saveDraft()">
+        <label class="option"><input type="radio" name="q18" value="Ada ndogo zaidi"
+            onchange="updateProgress();saveDraft()">
           Ningekubali ada ndogo zaidi (chini ya TZS 10,000)</label>
       </div>
     </div>
@@ -1058,12 +1140,13 @@
       <div class="q-hint">Tungependa kukujulisha app ikikamilika ili uwe wa kwanza kuitumia bure!</div>
       <div class="check-group" style="margin-bottom: 12px;">
         <label class="option">
-          <input type="checkbox" name="q21_waitlist" id="q21_waitlist" onchange="toggleWaitlist();saveDraft()"> 
+          <input type="checkbox" name="q21_waitlist" id="q21_waitlist" onchange="toggleWaitlist();saveDraft()">
           Ndiyo, nitaarifu app ikikamilika
         </label>
       </div>
       <div id="waitlist-wrap" style="display:none; animation: fadeIn 0.3s ease;">
-        <label style="font-size:13px;font-weight:600;color:var(--brown-m);display:block;margin-bottom:6px">📞 Namba yako ya WhatsApp:</label>
+        <label style="font-size:13px;font-weight:600;color:var(--brown-m);display:block;margin-bottom:6px">📞 Namba yako
+          ya WhatsApp:</label>
         <input type="text" id="q21_whatsapp" placeholder="Mfano: 0712 345 678" oninput="saveDraft()" style="width:100%">
       </div>
     </div>
@@ -1187,7 +1270,7 @@
       toggle('q4-card', isPanga);
 
       // ── Sehemu B header ──
-      toggleSection('sec-B', showSecB || isTafuta); 
+      toggleSection('sec-B', showSecB || isTafuta);
 
       // ── Q5, Q6, Q9 — HAZIONEKANI kama Ninatafuta ──
       toggle('q5-card', showSecB);
@@ -1280,14 +1363,30 @@
       let answered = 0, total = 0;
       document.querySelectorAll('[data-q]').forEach(card => {
         if (card.classList.contains('hidden')) return;
+
+        const isRequired = card.dataset.required === "true";
         total++;
+
         const hasRadio = card.querySelector('input[type=radio]:checked');
         const hasCheck = card.querySelector('input[type=checkbox]:checked');
         const hasSelect = card.querySelector('select') && card.querySelector('select').value;
-        const hasText = card.querySelector('textarea') && card.querySelector('textarea').value.trim().length > 2;
+        const hasText = card.querySelector('textarea') && card.querySelector('textarea').value.trim().length > 0;
+        const hasInput = card.querySelector('input[type=text]') && card.querySelector('input[type=text]').value.trim().length > 0;
         const hasScale = card.querySelector('.scale-btn.sel');
-        if (hasRadio || hasCheck || hasSelect || hasText || hasScale) answered++;
+
+        if (hasRadio || hasCheck || hasSelect || hasText || hasInput || hasScale) {
+          answered++;
+        } else if (!isRequired) {
+          // If optional and user has skipped it but answered subsequent required ones? 
+          // Simplified: just treat it as answered for the sake of the bar if it's optional?
+          // No, that's confusing. Let's just make text requirement > 0 and include text inputs.
+        }
       });
+
+      // Ensure we don't show 21/22 if all required are done but optional skip.
+      // Better: if answered == total-1 and the last one is optional, just show 100%?
+      // Or just make sure all fields are checked.
+
       const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
       document.getElementById('prog-fill').style.width = pct + '%';
       document.getElementById('prog-label').textContent = answered + ' / ' + total + ' maswali';
@@ -1428,13 +1527,13 @@
         const data = JSON.parse(draft);
         Object.keys(data).forEach(key => {
           if (!data[key]) return;
-          
+
           // Handle select
           const sel = document.getElementById(key);
           if (sel && sel.tagName === 'SELECT') {
             sel.value = data[key];
           }
-          
+
           // Handle textarea
           const txt = document.getElementById(key);
           if (txt && txt.tagName === 'TEXTAREA') {
@@ -1459,31 +1558,31 @@
 
           // Handle Special bits
           if (key === 'q17_other' && data[key]) {
-             const otxt = document.getElementById('q17-other-text');
-             if (otxt) otxt.value = data[key];
-             const ochk = document.getElementById('q17-other-chk');
-             if (ochk) { ochk.checked = true; toggleQ17Other(); }
+            const otxt = document.getElementById('q17-other-text');
+            if (otxt) otxt.value = data[key];
+            const ochk = document.getElementById('q17-other-chk');
+            if (ochk) { ochk.checked = true; toggleQ17Other(); }
           }
           if (key === 'q21_waitlist' && data[key]) {
-             const wchk = document.getElementById('q21_waitlist');
-             if (wchk) { wchk.checked = true; toggleWaitlist(); }
+            const wchk = document.getElementById('q21_waitlist');
+            if (wchk) { wchk.checked = true; toggleWaitlist(); }
           }
           if (key === 'q21_whatsapp' && data[key]) {
-             const wtel = document.getElementById('q21_whatsapp');
-             if (wtel) wtel.value = data[key];
+            const wtel = document.getElementById('q21_whatsapp');
+            if (wtel) wtel.value = data[key];
           }
-          
+
           // Handle scale buttons
           if (key === 'q19') {
             const btns = document.querySelectorAll('#scale-19 .scale-btn');
             btns.forEach(b => {
-               if (parseInt(b.dataset.val) === data[key]) b.classList.add('sel');
+              if (parseInt(b.dataset.val) === data[key]) b.classList.add('sel');
             });
           }
         });
         applyConditional();
         updateProgress();
-      } catch(e) { console.error("Draft error:", e); }
+      } catch (e) { console.error("Draft error:", e); }
     }
 
     // ── Section Reveal ──
