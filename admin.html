@@ -50,6 +50,18 @@
       document.getElementById('btn-raw').classList.toggle('active', view === 'raw');
     };
 
+    function formatDate(ts) {
+      if (!ts) return 'N/A';
+      try {
+        // Handle Firestore Timestamp {seconds, nanoseconds}
+        if (ts.seconds) return new Date(ts.seconds * 1000).toLocaleString('en-US');
+        // Handle ISO string or simple Date string
+        const d = new Date(ts);
+        if (isNaN(d.getTime())) return String(ts);
+        return d.toLocaleString('en-US');
+      } catch (e) { return String(ts); }
+    }
+
     window.downloadExcel = () => {
       if (window.allResponses.length === 0) {
         alert('❌ No data to export');
@@ -95,12 +107,7 @@
           row.push(window.allResponses.length - index); // Response #
 
           // Date
-          if (response.timestamp) {
-            const date = new Date(response.timestamp.seconds * 1000);
-            row.push(`"${date.toLocaleString('en-US')}"`);
-          } else {
-            row.push('""');
-          }
+          row.push(`"${formatDate(response.timestamp)}"`);
 
           // Questions
           for (const key of Object.keys(questions)) {
@@ -160,7 +167,7 @@
       }
 
       window.allResponses.forEach((response, index) => {
-        const date = response.timestamp ? new Date(response.timestamp.seconds * 1000).toLocaleString('en-US') : 'Unknown';
+        const date = formatDate(response.timestamp);
 
         const card = document.createElement('div');
         card.className = 'simple-card';
