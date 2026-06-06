@@ -205,8 +205,8 @@
         'q21_whatsapp': '📞 WhatsApp'
       };
 
-      let html = '';
       for (const [key, label] of Object.entries(questions)) {
+        if (key === 'q20') continue; // Handle separately
         const value = data[key];
         if (value !== null && value !== undefined && value !== '') {
           let displayValue = Array.isArray(value) ? value.join(', ') : value;
@@ -218,6 +218,17 @@
           `;
         }
       }
+
+      // Highlight Comments at the end
+      if (data['q20']) {
+        html += `
+          <div class="field feedback-highlight" style="background:#fdf6ec; padding:12px; border-radius:8px; margin-top:10px; border:1px solid #c8893a;">
+            <strong style="color:#5c3d1e;">💭 Maoni/Feedback:</strong>
+            <span style="display:block; margin-top:5px; font-style:italic;">"${data['q20']}"</span>
+          </div>
+        `;
+      }
+
       return html || '<p style="color: #999;">No responses recorded</p>';
     }
 
