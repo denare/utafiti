@@ -211,7 +211,7 @@
         'q21_waitlist': '🚀 Waitlist',
         'q21_whatsapp': '📞 WhatsApp'
       };
-
+      let html = '';
       for (const [key, label] of Object.entries(questions)) {
         if (key === 'q20') continue; // Handle separately
         const value = data[key];
