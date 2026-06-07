@@ -1126,9 +1126,9 @@
       <div class="scale-labels"><span>Tatizo dogo</span><span>Tatizo kubwa sana</span></div>
     </div>
 
-    <div class="q-card hidden" id="q20-card" data-q="20">
+    <div class="q-card hidden" id="q20-card" data-q="20" data-required="true">
       <div class="q-num">Swali 20</div>
-      <div class="q-text">Una maoni, wazo, au uzoefu wowote unaotaka kushiriki?</div>
+      <div class="q-text">Una maoni, wazo, au uzoefu wowote unaotaka kushiriki?<span class="q-required">*</span></div>
       <div class="q-hint">Hii ndiyo nafasi yako — sema chochote. Kiswahili au Kiingereza</div>
       <textarea id="q20" placeholder="Andika hapa..." oninput="updateProgress();saveDraft()"></textarea>
     </div>
@@ -1431,8 +1431,11 @@
         const hasRadio = card.querySelector('input[type=radio]:checked');
         const hasCheck = card.querySelector('input[type=checkbox]:checked');
         const hasSelect = card.querySelector('select') && card.querySelector('select').value;
+        const hasText = card.querySelector('textarea') && card.querySelector('textarea').value.trim().length > 0;
+        const hasInput = card.querySelector('input[type=text]') && card.querySelector('input[type=text]').value.trim().length > 0;
         const hasScale = card.querySelector('.scale-btn.sel');
-        if (!hasRadio && !hasCheck && !hasSelect && !hasScale) {
+
+        if (!hasRadio && !hasCheck && !hasSelect && !hasScale && !hasText && !hasInput) {
           card.classList.add('invalid');
           valid = false;
         }
