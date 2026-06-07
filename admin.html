@@ -11,7 +11,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { initializeFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     // Firebase config is injected from config.js
     const firebaseConfig = window.firebaseConfig || {
@@ -28,7 +28,9 @@
     }
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db = initializeFirestore(app, {
+      experimentalForceLongPolling: true,
+    });
 
     window.allResponses = [];
 
@@ -53,13 +55,18 @@
     function formatDate(ts) {
       if (!ts) return 'N/A';
       try {
-        // Handle Firestore Timestamp {seconds, nanoseconds}
-        if (ts.seconds) return new Date(ts.seconds * 1000).toLocaleString('en-US');
+        // Handle Firestore Timestamp class
+        if (typeof ts.toDate === 'function') return ts.toDate().toLocaleString('en-US');
+        // Handle Firestore Timestamp plain object {seconds, nanoseconds}
+        if (ts.seconds !== undefined) return new Date(ts.seconds * 1000).toLocaleString('en-US');
         // Handle ISO string or simple Date string
         const d = new Date(ts);
-        if (isNaN(d.getTime())) return String(ts);
-        return d.toLocaleString('en-US');
-      } catch (e) { return String(ts); }
+        if (!isNaN(d.getTime())) return d.toLocaleString('en-US');
+        return String(ts);
+      } catch (e) {
+        console.warn("Date error:", e);
+        return String(ts);
+      }
     }
 
     window.downloadExcel = () => {
